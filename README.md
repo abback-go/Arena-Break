@@ -33,16 +33,25 @@
 ### 1. 내 리포 만들기
 
 이 리포 상단의 **`Use this template` → `Create a new repository`** 를 누릅니다.
-(Fork가 아닙니다. 템플릿으로 만들어야 커밋 히스토리가 깨끗하게 시작됩니다.)
+Fork가 아닙니다. 템플릿으로 만들어야 커밋 히스토리가 깨끗하게 시작됩니다.
+
+```
+Repository name : arena-break        ← 이 이름으로 만드세요
+공개 범위        : Public
+```
+
+기본값으로 `Arena-Break` 가 채워져 있으면 `arena-break` 로 바꿔 주세요.
+아래 명령들이 이 이름을 기준으로 되어 있습니다.
 
 ### 2. 클론하고 upstream 등록
 
 ```bash
+# <내계정> 부분만 본인 GitHub 아이디로 바꾸세요
 git clone https://github.com/<내계정>/arena-break.git
 cd arena-break
 
-# 교수 리포를 upstream으로 등록 — 단계별 스냅샷을 받기 위해 필요합니다
-git remote add upstream https://github.com/<교수계정>/arena-break-starter.git
+# 교수 리포 등록 — 단계별 스냅샷을 받기 위해 필요합니다 (이 줄은 그대로 복사)
+git remote add upstream https://github.com/abback-go/Arena-Break.git
 git fetch upstream --tags
 ```
 
@@ -81,7 +90,7 @@ git checkout -b rescue w2-complete     # 원하는 시점으로 점프
 
 | 태그 | 상태 |
 |---|---|
-| `w1-step1` | 아레나 씬 + 플레이어 이동 |
+| `w1-step1` | 플레이어 이동 (아레나 씬은 스타터에 이미 포함) |
 | `w1-complete` | + Raycast 사격, 탄약/재장전 |
 | `w2-step1` | + Health / IDamageable |
 | `w2-step2` | + NavMesh 적 AI |
@@ -110,12 +119,15 @@ CLAUDE.md     ← Claude Code가 읽는 프로젝트 규약. 1주차에 함께 �
 
 `Assets/Scripts/` 하위는 **비어 있습니다.** 여러분이 Claude Code와 함께 채워 넣을 자리입니다.
 
+`Assets/Scenes/Arena.unity` 는 **NavMesh까지 구워진 상태로 이미 들어 있습니다.**
+아레나를 만드느라 시간을 쓰지 않고, 첫 시간부터 바로 코드 작성에 들어갑니다.
+
 ---
 
 ## 수업 자료
 
 - **[docs/00-SETUP.md](docs/00-SETUP.md)** — 0주차 환경 세팅 (수업 전 필수)
-- **[docs/PROMPT-CARDS.md](docs/PROMPT-CARDS.md)** — 검증된 프롬프트 카드 7장
+- **[docs/PROMPT-CARDS.md](docs/PROMPT-CARDS.md)** — 검증된 프롬프트 카드 9장
 - **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** — 자주 나는 문제와 해결
 - **[docs/INSTRUCTOR.md](docs/INSTRUCTOR.md)** — 교수·조교용 운영 노트
 - **[reference/PACKAGES.md](reference/PACKAGES.md)** — 필요 패키지 / 제거할 패키지

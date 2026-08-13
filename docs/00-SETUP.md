@@ -18,7 +18,7 @@
 □ 4. Claude Code 설치 및 로그인
 □ 5. Python 3.10+ 및 uv 설치
 □ 6. 스타터 프로젝트 복제 후 Unity로 열기 (콘솔 에러 0개)
-□ 7. MCP for Unity 설치 및 연결 확인
+□ 7. MCP for Unity 창 열기 → Start Server → Configure All Detected Clients → Auto-Start 체크
 □ 8. 인증 스크린샷 3장 제출
 ```
 
@@ -130,7 +130,7 @@ python3 --version   # macOS / Linux
 ```
 
 3.10 미만이거나 없으면 <https://www.python.org/downloads/> 에서 설치하세요.
-**Windows 설치 시 "Add python.exe to PATH" 체크를 잊지 마세요.**
+Windows 설치 화면에서 **"Add python.exe to PATH"** 를 체크한 뒤 설치합니다.
 
 ### 5-2. uv 설치
 
@@ -162,10 +162,12 @@ uv --version
 ### 6-2. 클론
 
 ```bash
+# <내계정> 부분만 본인 GitHub 아이디로 바꾸세요
 git clone https://github.com/<내계정>/arena-break.git
 cd arena-break
 
-git remote add upstream https://github.com/<교수계정>/arena-break-starter.git
+# 아래 두 줄은 그대로 복사
+git remote add upstream https://github.com/abback-go/Arena-Break.git
 git fetch upstream --tags
 ```
 
@@ -186,33 +188,59 @@ git fetch upstream --tags
 
 ---
 
-## 7. MCP for Unity 설치
+## 7. MCP for Unity 연결
 
 Claude Code가 Unity 에디터와 직접 대화할 수 있게 해주는 다리입니다.
 
-### 7-1. 패키지 설치
+### 7-1. 설치 확인
 
-Unity에서 **`Window → Package Manager`** 를 열고,
-좌측 상단 **`+`** → **`Install package from git URL...`** 을 선택한 뒤 아래를 붙여넣습니다.
+**패키지는 따로 설치하지 않습니다.** 스타터 프로젝트에 버전이 지정되어 있어,
+프로젝트를 처음 열 때 Unity가 자동으로 받습니다(1~3분).
 
 ```
-https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity
+Window → Package Management → Package Manager → In Project
 ```
 
-> 교수님이 수업용 고정 버전 태그를 안내한 경우, URL 뒤에 `#태그명`을 붙여 그 버전으로 설치하세요.
-> 예: `...unity-mcp.git?path=/MCPForUnity#v10.0.0`
-> **버전을 통일해야 수업 화면과 동일하게 동작합니다.**
+목록에 **MCP for Unity** 가 있으면 됩니다.
+동작에 필요한 것은 앞서 설치한 **Python 3.10+ 와 uv** 입니다.
 
-설치에 1~3분 걸립니다.
+### 7-2. 창 열기 · 서버 시작 · 클라이언트 등록
 
-### 7-2. 클라이언트 연결
+`Window → MCP for Unity` 는 하위 메뉴입니다. 창은 `Toggle MCP Window` 로 엽니다.
 
-Unity 메뉴 **`Window → MCP for Unity`** 를 열고
-**`Configure All Detected Clients`** 를 클릭합니다.
+```
+1. Window → MCP for Unity → Toggle MCP Window     (단축키 Ctrl+Shift+M / ⌘⇧M)
+2. Connect 탭 (기본 선택)
+3. Server → Local Server 줄의 [Start Server] 클릭
+4. Client Configuration → [Configure All Detected Clients] 클릭
+```
 
-Claude Code가 목록에 뜨고 상태가 초록색이면 성공입니다.
+Claude Code가 목록에 뜨고 상태 표시가 연결됨으로 바뀌면 됩니다.
 
-### 7-3. 연결 테스트
+`Configure All Detected Clients` 는 실행 이력이 있는 클라이언트만 잡습니다.
+Claude Code가 안 보이면 터미널에서 `claude` 를 한 번 실행한 뒤 다시 누릅니다.
+
+### 7-3. Auto-Start 켜기
+
+이 설정이 꺼져 있으면 Unity를 열 때마다 `Start Server` 를 눌러야 합니다.
+
+```
+MCP for Unity 창 → Advanced 탭 → Auto-Start Server on Editor Load 체크
+```
+
+이 값은 PC별 설정이라 프로젝트에 저장되지 않습니다. 본인 PC에서 한 번 켜두면 됩니다.
+
+### 7-4. 연결 테스트
+
+> ### 순서가 중요합니다 — Claude Code는 마지막에 실행
+> Claude Code는 **시작할 때 MCP 설정을 한 번 읽습니다.**
+> 그래서 `Start Server` 보다 먼저 켜 두면 Unity 도구를 잡지 못합니다.
+>
+> ```
+> Unity 열기 → Start Server → Configure All Detected Clients → 그다음 claude 실행
+> ```
+>
+> 이미 `claude` 가 떠 있었다면 **종료했다가 다시 실행**하세요.
 
 프로젝트 폴더에서 `claude`를 실행하고 아래를 물어보세요.
 
@@ -220,13 +248,15 @@ Claude Code가 목록에 뜨고 상태가 초록색이면 성공입니다.
 Unity 콘솔에 지금 어떤 메시지가 있는지 읽어줘.
 ```
 
-Unity 콘솔 내용을 읽어오면 연결 성공입니다.
+응답 첫 줄에 **`Called UnityMCP`** 가 뜨고 Unity 콘솔 내용을 읽어오면 성공입니다.
 
 한 번 더 확인:
 
 ```
 현재 열려 있는 씬의 오브젝트 목록을 알려줘.
 ```
+
+`Arena`, `Floor`, `Wall`, `SpawnPoints` 가 나오면 완료입니다.
 
 ---
 

@@ -228,7 +228,7 @@ HUD (UI Toolkit 말고 uGUI로):
 ## 카드 #9 — 빌드 점검
 
 ```
-Windows Standalone 빌드 설정을 점검해줘.
+Windows Standalone 빌드 설정을 점검해줘. (Unity 6.3은 File > Build Settings가 아니라 File > Build Profiles다)
 포함 씬, 회사명/제품명, 해상도 설정, 커서 잠금 동작을 확인하고
 빌드 후 흔히 나는 문제(에디터에서만 되는 코드)가 있는지 스크립트를 훑어봐.
 ```
