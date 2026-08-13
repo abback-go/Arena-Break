@@ -1,0 +1,74 @@
+# ==========================================================
+#  ARENA BREAK — Unity .gitignore
+#  Unity 6.3 LTS (6000.3.x)
+# ==========================================================
+
+# Unity 생성 폴더 (절대 커밋 금지)
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Asset Store 다운로드 캐시
+/[Aa]ssets/AssetStoreTools*
+/[Aa]ssets/Plugins/Editor/JetBrains*
+
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# 빌드 산출물
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+*.pdb
+
+# Crashlytics
+crashlytics-build.properties
+
+# Unity Packages 잠금 파일
+#  → 강의 중 버전 드리프트를 막기 위해 커밋한다. 삭제하지 말 것.
+!/[Pp]ackages/packages-lock.json
+
+# MCP for Unity 로컬 상태
+/[Aa]ssets/MCPForUnity/Editor/Data/
+*.mcp-local.json
+
+# Claude Code 로컬 설정 (개인 설정은 커밋하지 않음)
+.claude/settings.local.json
+
+# 학생 개인 작업 메모
+/scratch/
+/_personal/
