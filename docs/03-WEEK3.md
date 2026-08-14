@@ -107,7 +107,10 @@ Debug.Log($"발사 — 남은 탄약 {_currentAmmo}/{_magazineSize}");
   (Time.timeScale을 1로 되돌리는 것을 잊지 말 것)
 - 상태가 바뀌면 C# event로 알릴 것 — HUD가 구독할 것이다
 - 구독한 event는 OnDisable에서 반드시 해제할 것
-- R키는 InputSystem_Actions 에셋에 액션이 없다.
+- GameOver / Cleared 로 갈 때 플레이어 조작을 멈출 것.
+  timeScale = 0 은 Update를 멈추지 않아서, 안 끄면 죽은 뒤에도 총이 나간다
+- Esc로 게임을 종료할 것 (Application.Quit). 어느 상태에서든 눌리게
+- R키와 Esc는 InputSystem_Actions 에셋에 액션이 없다.
   WeaponSystem의 재장전처럼 코드에서 InputAction을 만들어 쓸 것
 
 파일: Assets/Scripts/Core/GameManager.cs 하나만 생성.
@@ -121,16 +124,39 @@ WaveSpawner와 PlayerController는 수정하지 마.
 |---|---|
 | "R키는 액션이 없다" | 1주차 재장전 때와 같은 함정입니다. **한 번 겪은 함정은 프롬프트에 미리 씁니다** |
 | "timeScale을 1로 되돌릴 것" | 재시작했는데 화면이 멈춰 있습니다. 가장 흔한 버그입니다 |
+| **"플레이어 조작을 멈출 것"** | 이게 없으면 **죽은 뒤에 총알이 한 발 더 나갑니다.** 아래에 이유를 적었습니다 |
+| **"Esc로 종료"** | 빌드는 전체 화면이라 닫기 버튼이 없습니다. 3-5에서 확인합니다 |
 | "상태가 바뀌면 event로 알릴 것" | HUD가 `Update()`에서 상태를 폴링하게 됩니다 |
 | "WaveSpawner는 수정하지 마" | 2주차에 완성한 것을 건드리지 않게 막습니다 |
 
-### timeScale = 0 의 함정 ★
+### timeScale = 0 의 함정 ★★
 
-`Time.timeScale = 0` 은 **`Time.deltaTime` 을 0으로 만듭니다.**
-`WaitForSeconds` 도 멈춥니다. 그런데 R키 입력은 살아 있어야 합니다.
+`Time.timeScale = 0` 이 멈추는 것과 멈추지 않는 것을 구분해야 합니다.
 
-Input System은 `timeScale` 과 무관하게 동작하므로 R키는 정상입니다.
-하지만 **코루틴으로 재시작을 지연시키면 영원히 안 돌아옵니다.** AI가 그렇게 짰는지 확인하세요.
+| 멈춘다 | 멈추지 않는다 |
+|---|---|
+| `Time.deltaTime`, `Time.time` | **`Update()` 호출 자체** |
+| `WaitForSeconds` | `WaitForSecondsRealtime`, `Time.unscaledTime` |
+| 물리 시뮬레이션 | **입력(Input System)** |
+
+여기서 두 가지가 나옵니다.
+
+**1. 대기를 코루틴 + `WaitForSeconds` 로 만들면 영원히 안 돌아옵니다.**
+정지 상태에서 시간이 흐르지 않기 때문입니다. `Time.unscaledTime` 이나 `WaitForSecondsRealtime` 을 써야 합니다.
+
+**2. 정지시켰다고 플레이어가 멈추지 않습니다.** ★
+
+`Update()` 는 계속 돌고 입력도 살아 있습니다. 실제로 이런 일이 생깁니다.
+
+```
+죽는다 → timeScale = 0 → 화면은 멈춤 → 좌클릭하면 총알이 한 발 나감
+```
+
+`Time.time` 이 얼어붙은 순간 `Time.time >= 다음발사시각` 이 한 번 참이 되기 때문입니다.
+그래서 **정지시킬 때 플레이어 조작 컴포넌트를 꺼야 합니다.**
+
+> 끄면 각 컴포넌트의 `OnDisable` 이 입력 액션까지 함께 해제해 줍니다.
+> **"멈춘 것처럼 보인다"와 "멈췄다"는 다릅니다.**
 
 ## 코드 읽기
 
@@ -176,6 +202,8 @@ Assets/Data 에 WaveData 에셋을 2개 더 만들어줘.
 ```
 □ Play 하면 잠깐 뒤 웨이브 1이 시작된다
 □ 적에게 계속 맞으면 죽고, 커서가 나타나며 화면이 멈춘다
+□ 죽은 뒤 좌클릭해도 총알이 나가지 않는다
+□ 죽은 뒤 마우스를 움직여도 시점이 돌지 않는다
 □ 그 상태에서 R을 누르면 게임이 처음부터 다시 시작된다
 □ 재시작 후 화면이 멈춰 있지 않다 (timeScale 복구 확인)
 □ 재시작 후 커서가 다시 잠긴다
@@ -242,7 +270,10 @@ git diff Assets/Scripts/Player/WeaponSystem.cs Assets/Scripts/Core/WaveSpawner.c
 HUD를 만들어줘. UI Toolkit 말고 uGUI로.
 
 표시할 것:
-- 좌하단: 체력바 (Slider). Health의 HealthChanged event 구독
+- 좌하단: 체력바. 어두운 배경 Image 안에 빨간 Image를 넣고,
+  그 빨간 Image의 RectTransform 앵커 폭으로 줄일 것.
+  Image.fillAmount는 쓰지 마 — 이유는 아래에 적었다.
+  Health의 HealthChanged event 구독
 - 우하단: 탄약 "현재 / 최대". WeaponSystem의 탄약 event 구독
 - 상단 중앙: 웨이브 번호. WaveSpawner의 WaveStarted event 구독
 - 상단 우측: 킬 수. WaveSpawner의 킬 event 구독
@@ -261,6 +292,9 @@ UI 오브젝트는 아직 만들지 말고, 어떤 오브젝트가 필요한지 
 
 둘 다 Unity의 정식 UI 시스템입니다. 그냥 두면 AI가 하나를 골라줍니다.
 **기술 선택은 사람이 합니다.** 이 수업은 인스펙터에서 눈으로 확인하는 흐름이라 uGUI가 맞습니다.
+
+> MCP의 `manage_ui` 도구는 **UI Toolkit 전용**입니다. uGUI 전용 도구는 없어서
+> Canvas와 위젯을 오브젝트·컴포넌트 단위로 하나씩 만들게 됩니다. 그 과정의 함정은 아래에 정리했습니다.
 
 ## UI 오브젝트 배치
 
@@ -288,10 +322,37 @@ UI 오브젝트 생성 자체가 잘 안 되면 **손으로 만들어도 됩니�
 
 ```
 GameObject > UI > Canvas
-GameObject > UI > Slider / Text
+GameObject > UI > Legacy > Text
 ```
 
+### uGUI를 코드·MCP로 만들 때 밟는 함정 5개 ★★
+
+이 절은 **실제로 다섯 번 다 밟고 적은 것**입니다. HUD가 안 보이면 여기부터 보세요.
+
+| # | 증상 | 원인 | 대응 |
+|---|---|---|---|
+| 1 | HUD가 **아예 안 보임** | 컴포넌트로 추가한 `Canvas` 는 **World Space가 기본**이다. 메뉴로 만들면 Overlay | `Render Mode` 를 `Screen Space - Overlay` 로 |
+| 2 | 체력바가 **줄지 않고 항상 꽉 참** | `Image.fillAmount` 는 **Source Image(스프라이트)가 있어야** 동작한다. 코드로 만든 Image에는 없다 | 스프라이트를 넣거나, `RectTransform` 앵커 폭으로 줄인다 |
+| 3 | HUD가 **가장자리만 잘려 안 보임** | Game 뷰 해상도가 창보다 크고 `Scale` 이 높으면 중앙만 보인다. HUD는 전부 가장자리에 있다 | 해상도를 `Free Aspect` 로, 또는 `Scale` 을 왼쪽 끝으로 |
+| 4 | 값 수정이 거부됨 | `This cannot be used during play mode` | **Play를 먼저 멈춘다** |
+| 5 | AI가 `Text` 컴포넌트를 읽으면 응답이 수천 줄 | `Text` 는 내부 텍스트 제너레이터의 정점 데이터까지 전부 뱉는다 | `Text` 는 **AI에게 읽히지 말고 인스펙터로 확인**한다 |
+
+1번과 2번은 **에러가 하나도 안 납니다.** 콘솔은 깨끗한데 화면만 비어 있습니다.
+
+> **이것이 3주차의 주제입니다.**
+> 에러가 없다는 것은 코드가 맞다는 뜻이 아닙니다. **눈으로 본 것만 검증된 것입니다.**
+
+### 폰트 — TextMeshPro를 쓰지 않는 이유
+
+이 프로젝트는 **레거시 `UnityEngine.UI.Text`** 를 씁니다.
+TextMeshPro를 처음 쓰면 "TMP Essentials를 임포트하겠느냐"는 창이 뜨고,
+**그 창이 떠 있는 동안 MCP가 멈춥니다.** 레거시 `Text` 는 기본 폰트가 자동으로 잡혀 그냥 나옵니다.
+
 ## 검증
+
+> **먼저 Game 뷰 상단의 해상도를 `Free Aspect` 로 두세요.**
+> `Full HD (1920×1080)` 처럼 고정 해상도가 창보다 크면 가장자리가 잘려
+> **HUD가 하나도 없는 것처럼 보입니다.**
 
 ```
 □ 체력바가 있고, 적에게 맞으면 줄어든다
@@ -497,9 +558,20 @@ Windows Standalone 빌드 설정을 점검해줘.
 | `Debug.Log` 가 많음 | 성능 저하. 치명적이진 않음 |
 | `UnityEditor` 네임스페이스 사용 | **빌드 자체가 실패합니다** |
 | `Application.isEditor` 분기 | 빌드에서 다른 경로를 탑니다 |
-| 커서 잠금 해제 수단이 없음 | **창을 못 빠져나옵니다.** `Esc` 는 에디터 전용 동작입니다 |
+| 종료 수단이 없음 | **창을 못 닫습니다.** 아래를 꼭 읽으세요 |
 
-마지막 항목을 꼭 보세요. 빌드에서 `Esc` 는 커서를 풀어주지 않습니다.
+### 빌드는 전체 화면입니다 ★
+
+기본 빌드는 전체 화면이라 **닫기 버튼이 없습니다.** 게임 안에 종료 수단이 없으면
+`Alt+F4` 나 작업 관리자로만 빠져나올 수 있습니다.
+
+에디터의 `Esc` 는 커서를 풀어주는 **에디터 전용 동작**이고, 빌드에는 그 동작이 없습니다.
+그래서 3-1에서 `Esc` → `Application.Quit()` 을 넣었습니다.
+
+> **`Application.Quit()` 은 에디터에서 아무 일도 하지 않습니다.**
+> 에디터에서 아무리 눌러 봐도 검증되지 않습니다. **빌드로만 확인할 수 있는 항목입니다.**
+>
+> 오늘 배운 것이 여기서도 반복됩니다 — 에러가 없다는 것이 정상이라는 뜻은 아닙니다.
 
 ## 빌드
 
@@ -518,8 +590,11 @@ File > Build Profiles → Windows 프로필 선택 → Build
 □ 웨이브가 진행된다
 □ 죽으면 게임오버 화면이 나온다
 □ R로 재시작된다
-□ 창을 닫을 수 있다 (Alt+F4로라도)
+□ Esc를 누르면 창이 닫힌다   ← 에디터에서는 확인 불가능한 항목
 ```
+
+빌드는 프로젝트 폴더 밖에 만들었으므로 리포에 들어가지 않습니다.
+첫 빌드는 1~2분, 두 번째부터는 10초 안팎입니다.
 
 ## 제출물 4종
 
@@ -547,7 +622,7 @@ git push origin main
 
 ```
 □ Player 에 Health 부착 — 적에게 맞으면 체력이 줄어드는 것 확인
-□ GameManager.cs — 게임오버 / 재시작 동작 확인 + 커밋
+□ GameManager.cs — 게임오버 / 재시작 / 죽은 뒤 조작 정지 확인 + 커밋
 □ WaveData 에셋 5개 (코드 0줄로 2개 추가)
 □ HUDController.cs — 체력·탄약·웨이브·킬 표시 확인 + 커밋
 □ 게임필 최소 1개 + 커밋
