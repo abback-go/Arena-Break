@@ -242,7 +242,10 @@ git diff Assets/Scripts/Player/WeaponSystem.cs Assets/Scripts/Core/WaveSpawner.c
 HUD를 만들어줘. UI Toolkit 말고 uGUI로.
 
 표시할 것:
-- 좌하단: 체력바 (Slider). Health의 HealthChanged event 구독
+- 좌하단: 체력바. 어두운 배경 Image 안에 빨간 Image를 넣고,
+  그 빨간 Image의 RectTransform 앵커 폭으로 줄일 것.
+  Image.fillAmount는 쓰지 마 — 이유는 아래에 적었다.
+  Health의 HealthChanged event 구독
 - 우하단: 탄약 "현재 / 최대". WeaponSystem의 탄약 event 구독
 - 상단 중앙: 웨이브 번호. WaveSpawner의 WaveStarted event 구독
 - 상단 우측: 킬 수. WaveSpawner의 킬 event 구독
@@ -261,6 +264,9 @@ UI 오브젝트는 아직 만들지 말고, 어떤 오브젝트가 필요한지 
 
 둘 다 Unity의 정식 UI 시스템입니다. 그냥 두면 AI가 하나를 골라줍니다.
 **기술 선택은 사람이 합니다.** 이 수업은 인스펙터에서 눈으로 확인하는 흐름이라 uGUI가 맞습니다.
+
+> MCP의 `manage_ui` 도구는 **UI Toolkit 전용**입니다. uGUI 전용 도구는 없어서
+> Canvas와 위젯을 오브젝트·컴포넌트 단위로 하나씩 만들게 됩니다. 그 과정의 함정은 아래에 정리했습니다.
 
 ## UI 오브젝트 배치
 
@@ -288,10 +294,37 @@ UI 오브젝트 생성 자체가 잘 안 되면 **손으로 만들어도 됩니�
 
 ```
 GameObject > UI > Canvas
-GameObject > UI > Slider / Text
+GameObject > UI > Legacy > Text
 ```
 
+### uGUI를 코드·MCP로 만들 때 밟는 함정 5개 ★★
+
+이 절은 **실제로 다섯 번 다 밟고 적은 것**입니다. HUD가 안 보이면 여기부터 보세요.
+
+| # | 증상 | 원인 | 대응 |
+|---|---|---|---|
+| 1 | HUD가 **아예 안 보임** | 컴포넌트로 추가한 `Canvas` 는 **World Space가 기본**이다. 메뉴로 만들면 Overlay | `Render Mode` 를 `Screen Space - Overlay` 로 |
+| 2 | 체력바가 **줄지 않고 항상 꽉 참** | `Image.fillAmount` 는 **Source Image(스프라이트)가 있어야** 동작한다. 코드로 만든 Image에는 없다 | 스프라이트를 넣거나, `RectTransform` 앵커 폭으로 줄인다 |
+| 3 | HUD가 **가장자리만 잘려 안 보임** | Game 뷰 해상도가 창보다 크고 `Scale` 이 높으면 중앙만 보인다. HUD는 전부 가장자리에 있다 | 해상도를 `Free Aspect` 로, 또는 `Scale` 을 왼쪽 끝으로 |
+| 4 | 값 수정이 거부됨 | `This cannot be used during play mode` | **Play를 먼저 멈춘다** |
+| 5 | AI가 `Text` 컴포넌트를 읽으면 응답이 수천 줄 | `Text` 는 내부 텍스트 제너레이터의 정점 데이터까지 전부 뱉는다 | `Text` 는 **AI에게 읽히지 말고 인스펙터로 확인**한다 |
+
+1번과 2번은 **에러가 하나도 안 납니다.** 콘솔은 깨끗한데 화면만 비어 있습니다.
+
+> **이것이 3주차의 주제입니다.**
+> 에러가 없다는 것은 코드가 맞다는 뜻이 아닙니다. **눈으로 본 것만 검증된 것입니다.**
+
+### 폰트 — TextMeshPro를 쓰지 않는 이유
+
+이 프로젝트는 **레거시 `UnityEngine.UI.Text`** 를 씁니다.
+TextMeshPro를 처음 쓰면 "TMP Essentials를 임포트하겠느냐"는 창이 뜨고,
+**그 창이 떠 있는 동안 MCP가 멈춥니다.** 레거시 `Text` 는 기본 폰트가 자동으로 잡혀 그냥 나옵니다.
+
 ## 검증
+
+> **먼저 Game 뷰 상단의 해상도를 `Free Aspect` 로 두세요.**
+> `Full HD (1920×1080)` 처럼 고정 해상도가 창보다 크면 가장자리가 잘려
+> **HUD가 하나도 없는 것처럼 보입니다.**
 
 ```
 □ 체력바가 있고, 적에게 맞으면 줄어든다
