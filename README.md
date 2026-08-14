@@ -79,17 +79,27 @@ bash tools/setup-check.sh
 
 ---
 
-## 진도가 밀렸을 때 — 두 줄이면 따라잡습니다
+## 진도가 밀렸을 때 — 명령 한 줄이면 따라잡습니다
 
 수업 중 막혔다고 포기하지 마세요. 내 작업을 보존한 채로 교수님 스냅샷으로 점프할 수 있습니다.
 
-```bash
-git add -A && git commit -m "wip"      # 내가 하던 작업 저장
-git fetch upstream --tags              # 최신 스냅샷 받기
-git checkout -b rescue w2-complete     # 원하는 시점으로 점프
+**Unity를 먼저 닫으세요.** 씬 파일이 바뀌는데 Unity가 그것을 메모리에 들고 있으면 충돌합니다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\rescue.ps1 w2-complete
 ```
 
+Git Bash / macOS 라면:
+
+```bash
+./tools/rescue.sh w2-complete
+```
+
+하던 작업은 스크립트가 `wip` 커밋으로 **자동 저장**합니다. 사라지지 않습니다.
+끝나면 Unity를 다시 열고 `Assets/Scenes/Arena` 씬을 엽니다.
+
 원래 작업으로 돌아가려면 `git checkout main`.
+태그 이름을 빼고 실행하면 고를 수 있는 목록이 나옵니다.
 
 ### 단계별 스냅샷 태그
 

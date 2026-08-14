@@ -3,6 +3,9 @@
 수업에서 사용하는 검증된 프롬프트 모음입니다.
 **그대로 복사해서 쓰는 것이 목적이 아닙니다.** 각 카드가 왜 이렇게 쓰였는지 이해하고, 과제에서는 직접 작성하세요.
 
+> **실습 중에는 주차 문서의 프롬프트를 쓰세요.** 이 문서는 해설용입니다.
+> 1주차 카드(#1, #2)는 **일부러 짧게** 두었습니다. 1주차 문서에서 그 차이로 배우는 것이 있습니다.
+
 ---
 
 ## 좋은 프롬프트의 5가지 조건
@@ -106,10 +109,14 @@ IDamageable 인터페이스와 Health 컴포넌트로 나누는 게 좋을까?
 ```
 NavMeshAgent 기반 근접 적을 만들어줘.
 
-- 플레이어를 추적, 2m 이내면 공격 (2초 간격, 데미지 10)
-- 앞서 만든 IDamageable을 구현할 것
-- HP 30, 사망 시 1초 뒤 파괴
+- 플레이어를 추적. 추적 60m / 공격 2m (아레나 대각선이 약 57m다)
+- 공격은 2초 간격, 데미지 10. 앞서 만든 IDamageable로 줄 것
+- 체력은 앞서 만든 Health 컴포넌트를 쓴다. 체력을 따로 갖지 마
+- Health의 사망 event를 구독하고, OnDisable에서 반드시 해제할 것
 - 상태: Idle / Chase / Attack / Dead — enum + switch로 단순하게
+- 플레이어는 [SerializeField] Transform 참조로 받되,
+  프리팹은 씬 오브젝트를 참조할 수 없으니
+  스폰한 쪽이 넣어줄 공개 메서드를 하나 둘 것
 - 값은 전부 SerializeField
 
 파일: Assets/Scripts/Enemy/EnemyAI.cs
@@ -118,7 +125,10 @@ NavMesh 베이크는 내가 할 테니 절차만 알려줘.
 
 **이 카드의 포인트**
 - "enum + switch로 단순하게" → 요청하지 않은 복잡한 상태 머신 프레임워크를 막는다
-- "앞서 만든 IDamageable을 구현할 것" → 기존 코드와의 연결을 명시
+- "앞서 만든 IDamageable / Health를 쓸 것" → 기존 코드와의 연결을 명시. 체력이 두 군데 생기는 것을 막는다
+- **"스폰한 쪽이 넣어줄 공개 메서드"** → 이게 없으면 웨이브가 스폰한 적이 **전부 제자리에 서 있습니다.**
+  프리팹 에셋은 씬의 `Player` 를 가리킬 수 없기 때문입니다
+- 추적 거리 60m는 짐작이 아니라 **아레나 크기에서 나온 값**이다. 20m면 구석의 적이 오지 않는다
 
 ---
 
@@ -127,10 +137,16 @@ NavMesh 베이크는 내가 할 테니 절차만 알려줘.
 ```
 ScriptableObject 기반 웨이브 시스템을 만들어줘.
 
-- WaveData(ScriptableObject): 적 프리팹, 스폰 수, 스폰 간격
+- WaveData(ScriptableObject): 적 프리팹, 스폰 수, 스폰 간격.
+  CreateAssetMenu를 붙여 에디터에서 만들 수 있게
 - WaveSpawner: WaveData 리스트를 순서대로 진행,
   현재 웨이브의 적이 전멸하면 3초 후 다음 웨이브
-- 스폰 위치는 씬에 배치한 Transform 배열 중 랜덤
+- 스폰 위치는 SpawnPoints 오브젝트 하나를 [SerializeField]로 받아
+  그 자식들을 Awake에서 모아 쓰고 그중 랜덤으로.
+  Transform 배열을 인스펙터에 노출하지 마
+- 플레이어 Transform을 받아서, 스폰한 적에게 넘겨줄 것
+- 살아 있는 적 수는 스폰할 때 세고 각 적의 사망 event로 줄일 것.
+  매 프레임 FindObjectsOfType으로 세지 마
 - 웨이브 시작 / 클리어 / 전체 클리어를 C# event로 노출
 
 파일 2개만: Core/WaveData.cs, Core/WaveSpawner.cs
@@ -140,6 +156,9 @@ ScriptableObject 기반 웨이브 시스템을 만들어줘.
 **이 카드의 포인트**
 - **"오브젝트 풀링은 아직 넣지 마"** → 다음 단계를 위해 일부러 남겨둔다
 - 한 번에 완벽하게 만들지 않는 것이 오히려 안전하다
+- **"Transform 배열을 노출하지 마"** → MCP는 **씬 오브젝트 참조 배열을 채우지 못한다.**
+  "연결했습니다"라고 답하지만 실제로는 전부 `None` 이다. 에셋 참조 배열은 잘 들어간다
+- "매 프레임 FindObjectsOfType 하지 마" → 안 쓰면 `Update()` 에서 씬 전체를 훑는 코드가 나온다
 
 ---
 
@@ -162,23 +181,44 @@ WaveSpawner의 공개 API와 event는 그대로 유지할 것.
 
 ## 카드 #6 — 상태 머신 + HUD
 
+> 3주차 문서에서는 이것을 **두 번에 나눠** 요청합니다 (3-1 상태 머신 → 3-2 HUD).
+> 한 번에 두 파일을 만들면 검증 지점이 뭉개집니다.
+
 ```
-게임 상태 머신과 HUD를 만들어줘.
+게임 상태 머신을 만들어줘.
 
-GameManager: Ready → Playing → WaveClear → GameOver → (재시작)
-- 게임오버 시 커서 표시 + 시간 정지
-- R키로 씬 리로드
+GameManager: Ready → Playing → GameOver → Cleared — enum + switch로 단순하게
+- 플레이어 Health의 사망 event, WaveSpawner의 전체 클리어 event를 구독
+- 정지 시 커서 표시 + Time.timeScale = 0
+- 정지 시 플레이어 조작 컴포넌트를 끌 것.
+  timeScale = 0 은 Update를 멈추지 않아서, 안 끄면 죽은 뒤에도 총이 나간다
+- R키로 씬 리로드 (timeScale을 1로 되돌리는 것을 잊지 말 것)
+- Esc로 종료 (Application.Quit). 빌드는 전체 화면이라 닫기 버튼이 없다
+- 대기 시간은 코루틴 말고 Time.unscaledTime으로 잴 것
+- 상태가 바뀌면 C# event로 알릴 것
 
-HUD (UI Toolkit 말고 uGUI로):
-- 좌하단 체력바, 우하단 탄약(현재/최대), 상단 중앙 웨이브 번호, 킬 카운트
-- WaveSpawner와 Health의 event를 구독할 것. Update에서 폴링하지 말 것
+파일: Core/GameManager.cs
+```
 
-파일: Core/GameManager.cs, UI/HUDController.cs
+```
+HUD를 만들어줘. UI Toolkit 말고 uGUI로.
+
+- 좌하단 체력바, 우하단 탄약(현재/최대), 상단 중앙 웨이브 번호, 킬 수
+- 화면 중앙에 게임오버/클리어 안내. 평소에는 숨길 것
+- 체력바는 Image.fillAmount 말고 RectTransform 앵커 폭으로 줄일 것
+  (fillAmount는 Source Image가 있어야 동작한다)
+- 전부 event 구독. Update에서 폴링하지 말 것
+- 구독은 OnEnable, 해제는 OnDisable
+- 참조는 전부 [SerializeField]. Find 계열 금지
+
+파일: UI/HUDController.cs
 ```
 
 **이 카드의 포인트**
 - "UI Toolkit 말고 uGUI로" → 기술 선택을 사람이 한다
 - "Update에서 폴링하지 말 것" → `CLAUDE.md` 규약을 프롬프트에서 한 번 더 강조
+- **"조작 컴포넌트를 끌 것"** → `timeScale = 0` 은 화면만 멈춘다. 입력과 `Update()` 는 그대로 산다
+- **"Esc로 종료"** → 없으면 빌드에서 창을 못 닫는다. `Application.Quit()` 은 **에디터에서 무동작**이라 빌드로만 검증된다
 
 ---
 
@@ -186,15 +226,16 @@ HUD (UI Toolkit 말고 uGUI로):
 
 ```
 타격감을 넣어줘. 단, 한 번에 하나씩 하고 매번 내가 테스트할게.
-1) 머즐 플래시 + 명중 파티클
+1) 적 피격 시 머티리얼 0.05초 흰색 플래시
 2) 피격 시 카메라 셰이크 (0.1초, 강도 조절 가능)
-3) 적 피격 시 머티리얼 0.05초 흰색 플래시
+3) 머즐 플래시 + 명중 파티클
 
-1번부터 시작해.
+1번부터 시작해. 2번은 내가 말하기 전에는 하지 마.
 ```
 
 **이 카드의 포인트**
 - 할 일을 다 보여주되 **"1번부터"** 로 실행을 제한했다
+- **"내가 말하기 전에는 하지 마"** → 이 줄이 없으면 3개를 한 번에 만든다
 - "매번 내가 테스트할게" → 검증 주체를 명시
 
 ---
@@ -279,7 +320,7 @@ git checkout -- <파일경로>   # 특정 파일만 취소
 `docs/my-prompts.md` 파일을 만들어 아래 형식으로 기록하세요.
 
 ```markdown
-## 2주차 과제 — 원거리 공격 적 추가
+## 2주차 과제 — 원거리 적 추가
 
 ### 시도 1
 (프롬프트 전문)

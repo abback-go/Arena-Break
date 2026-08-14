@@ -667,15 +667,29 @@ git push origin main
 
 ## 진도가 밀렸다면
 
-내 작업을 보존한 채로 완성본으로 점프할 수 있습니다.
+내 작업을 보존한 채로 완성 시점으로 점프할 수 있습니다.
 
-```bash
-git add -A && git commit -m "wip"      # 하던 작업 저장
-git fetch upstream --tags
-git checkout -b rescue w2-step1        # 원하는 시점으로 점프
+**1. Unity를 닫습니다.**
+씬 파일이 바뀌는데 Unity가 그것을 메모리에 들고 있으면 충돌합니다.
+
+**2. 명령 한 줄.**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\rescue.ps1 w2-step1
 ```
 
+Git Bash / macOS 라면:
+
+```bash
+./tools/rescue.sh w2-step1
+```
+
+**3. Unity를 다시 열고 `Assets/Scenes/Arena` 씬을 엽니다.**
+
+하던 작업은 스크립트가 `wip` 커밋으로 **자동 저장**합니다. 사라지지 않습니다.
 돌아오려면 `git checkout main`.
+
+태그 이름을 빼고 실행하면 고를 수 있는 목록이 나옵니다.
 
 | 태그 | 상태 |
 |---|---|
