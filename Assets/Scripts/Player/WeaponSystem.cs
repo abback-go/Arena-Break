@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using ArenaBreak.Core;
 using UnityEngine;
@@ -30,6 +31,8 @@ namespace ArenaBreak.Player
         // 벽·표적과 같은 색이면 명중 지점이 보이지 않는다
         [SerializeField] private Color _hitMarkerColor = Color.yellow;
 
+        public event Action<int, int> AmmoChanged;
+
         private InputAction _attackAction;
         private InputAction _reloadAction;
 
@@ -49,6 +52,9 @@ namespace ArenaBreak.Player
         {
             _attackAction.Enable();
             _reloadAction.Enable();
+
+            // HUD가 구독을 마친 뒤 켜지므로 현재 값을 한 번 알려야 첫 화면이 맞는다
+            AmmoChanged?.Invoke(_currentAmmo, _magazineSize);
         }
 
         private void OnDisable()
@@ -105,8 +111,7 @@ namespace ArenaBreak.Player
                 }
             }
 
-            // 3주차에 HUD로 옮긴다
-            Debug.Log($"발사 — 남은 탄약 {_currentAmmo}/{_magazineSize}");
+            AmmoChanged?.Invoke(_currentAmmo, _magazineSize);
         }
 
         // 풀링 대상: 발사마다 생성/파괴된다
@@ -127,13 +132,12 @@ namespace ArenaBreak.Player
         private IEnumerator Reload()
         {
             _isReloading = true;
-            Debug.Log($"재장전 시작 — {_reloadDuration}초");
 
             yield return new WaitForSeconds(_reloadDuration);
 
             _currentAmmo = _magazineSize;
             _isReloading = false;
-            Debug.Log($"재장전 완료 — 남은 탄약 {_currentAmmo}/{_magazineSize}");
+            AmmoChanged?.Invoke(_currentAmmo, _magazineSize);
         }
     }
 }

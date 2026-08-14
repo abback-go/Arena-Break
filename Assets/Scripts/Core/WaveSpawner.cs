@@ -22,12 +22,14 @@ namespace ArenaBreak.Core
         public event Action<int> WaveStarted;
         public event Action<int> WaveCleared;
         public event Action AllWavesCleared;
+        public event Action<int> KillCountChanged;
 
         private readonly List<Transform> _spawnPoints = new List<Transform>();
         private readonly Dictionary<GameObject, ObjectPool<GameObject>> _pools =
             new Dictionary<GameObject, ObjectPool<GameObject>>();
 
         private int _aliveCount;
+        private int _killCount;
 
         private void Awake()
         {
@@ -132,6 +134,8 @@ namespace ArenaBreak.Core
                 {
                     health.Died -= OnEnemyDied;
                     _aliveCount--;
+                    _killCount++;
+                    KillCountChanged?.Invoke(_killCount);
                 }
 
                 health.Died += OnEnemyDied;
