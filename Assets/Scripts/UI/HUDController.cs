@@ -71,11 +71,11 @@ namespace ArenaBreak.UI
             switch (state)
             {
                 case GameManager.State.GameOver:
-                    ShowMessage("GAME OVER\nR 키로 재시작");
+                    ShowMessage("GAME OVER\nR 재시작 · Esc 종료");
                     break;
 
                 case GameManager.State.Cleared:
-                    ShowMessage("CLEARED\nR 키로 재시작");
+                    ShowMessage("CLEARED\nR 재시작 · Esc 종료");
                     break;
 
                 default:

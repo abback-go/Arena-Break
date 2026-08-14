@@ -16,8 +16,11 @@ namespace ArenaBreak.Core
             Cleared
         }
 
-        // InputSystem_Actions 에셋에 재시작 액션이 없어서 코드에서 직접 만든다
+        // InputSystem_Actions 에셋에 없는 키라 코드에서 직접 만든다
         private const string RestartBindingPath = "<Keyboard>/r";
+
+        // 빌드는 전체 화면이라 닫기 버튼이 없다. 종료 수단이 없으면 창을 못 빠져나온다
+        private const string QuitBindingPath = "<Keyboard>/escape";
 
         [Header("References")]
         [SerializeField] private Health _playerHealth;
@@ -35,11 +38,13 @@ namespace ArenaBreak.Core
         public State Current { get; private set; } = State.Ready;
 
         private InputAction _restartAction;
+        private InputAction _quitAction;
         private float _playingStartTime;
 
         private void Awake()
         {
             _restartAction = new InputAction("Restart", InputActionType.Button, RestartBindingPath);
+            _quitAction = new InputAction("Quit", InputActionType.Button, QuitBindingPath);
         }
 
         private void OnEnable()
@@ -47,6 +52,7 @@ namespace ArenaBreak.Core
             _playerHealth.Died += OnPlayerDied;
             _waveSpawner.AllWavesCleared += OnAllWavesCleared;
             _restartAction.Enable();
+            _quitAction.Enable();
 
             SetState(State.Ready);
             _playingStartTime = Time.unscaledTime + _readyDuration;
@@ -57,15 +63,23 @@ namespace ArenaBreak.Core
             _playerHealth.Died -= OnPlayerDied;
             _waveSpawner.AllWavesCleared -= OnAllWavesCleared;
             _restartAction.Disable();
+            _quitAction.Disable();
         }
 
         private void OnDestroy()
         {
             _restartAction.Dispose();
+            _quitAction.Dispose();
         }
 
         private void Update()
         {
+            // 어느 상태에서든 나갈 수 있어야 한다. 에디터에서는 아무 일도 하지 않는다
+            if (_quitAction.WasPressedThisFrame())
+            {
+                Application.Quit();
+            }
+
             switch (Current)
             {
                 case State.Ready:
