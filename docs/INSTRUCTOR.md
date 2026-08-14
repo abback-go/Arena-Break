@@ -378,6 +378,9 @@ git diff --cached --name-only
 
 ## 2. 단계별 스냅샷 태그 만들기
 
+> **이 절은 이미 완료되어 있습니다.** 태그 7개가 `solution` 브랜치에 만들어져 push되어 있습니다.
+> 아래는 다음 학기에 처음부터 다시 만들 때를 위한 기록입니다.
+
 D-14에 **전체 게임을 혼자 한 번 만들면서** 각 단계마다 태그를 찍습니다.
 이 태그들이 수업 중 진도 밀린 학생을 구제하는 안전망입니다.
 
@@ -404,8 +407,77 @@ git push origin solution --tags
 git checkout main
 ```
 
-## 3. 수업 후
+## 3. 수업 직전 최종 점검
+
+### 3-1. 내 PC — 시연 준비 (10분)
+
+```
+□ C:\Abback\arena-break-demo\ArenaBreak.exe 가 실행된다
+□ Esc 로 종료된다   ← 유일한 종료 수단이다
+□ 프로젝터 해상도에서 HUD 네 개가 다 보인다 (체력·탄약·웨이브·킬)
+□ 인터넷이 끊겨도 되도록 zip을 USB에 하나 복사해 둔다
+```
+
+### 3-2. 내 PC — 실습 환경 (10분)
+
+**순서를 지켜야 합니다.** Claude Code는 시작할 때 MCP 설정을 한 번만 읽습니다.
+
+```
+□ Unity 6.3 으로 프로젝트가 열리고 콘솔 에러 0개
+□ Window > MCP for Unity > Toggle MCP Window > [Start Server]
+□ 그다음에 터미널에서 claude 실행
+□ "Unity 콘솔에 지금 어떤 메시지가 있는지 읽어줘" → Called UnityMCP 가 뜬다
+```
+
+수업 중 자주 걸리는 두 가지는 미리 꺼두거나 바꿔둡니다.
+
+```
+□ Console 창의 Collapse 를 끈다   ← 켜져 있으면 같은 로그가 안 늘어난다
+□ Game 뷰 해상도를 Free Aspect 로 둔다   ← 고정 해상도면 HUD가 잘려 안 보인다
+```
+
+### 3-3. 리포 상태 (5분)
+
+```
+□ github.com/abback-go/Arena-Break 에 Use this template 버튼이 보인다
+□ main 의 Assets/Scripts/ 하위 네 폴더가 비어 있다
+□ 태그 7개가 있다      git ls-remote --tags origin
+□ Releases 에서 ArenaBreak-demo.zip 이 받아진다
+```
+
+### 3-4. 구제 경로 리허설 (5분)
+
+진도 밀린 학생이 나오면 쓸 경로입니다. **한 번은 직접 돌려보고 들어가세요.**
+
+```
+□ Unity 를 닫는다
+□ powershell -ExecutionPolicy Bypass -File .\tools\rescue.ps1 w1-complete
+□ Assets/Scripts/Player 에 파일 두 개가 생겼다
+□ git checkout main 으로 돌아온다
+```
+
+### 3-5. 학생에게 보낼 안내 (수업 전날)
+
+```
+1. github.com/abback-go/Arena-Break 에서 [Use this template] → 리포 이름 arena-break
+2. clone 한 뒤 docs/00-SETUP.md 의 체크리스트 8개를 끝내 올 것
+3. 수업 당일에는 docs/01-WEEK1.md 를 열고 시작
+```
+
+### 3-6. 알고 들어갈 것 — 검증되지 않은 지점
+
+이 셋은 리허설로 확인할 수 없었습니다. 수업이 막히지는 않지만 미리 알고 계세요.
+
+| 항목 | 왜 미검증인가 | 어떻게 되든 |
+|---|---|---|
+| 1-1 public 필드 실험 / 2-1 씬 조작 질문 / 3-3 "1번만 만들기" | AI가 규약을 지키는지 보는 관찰 항목인데, 리허설 세션은 문서를 이미 읽은 상태였다 | 문서에 **"안 지켜졌으면 이렇게 해석하라"** 표가 있어 어느 쪽이 나와도 수업이 성립한다 |
+| 시간 배분 (25 / 55 / 65분 등) | 사람이 코드를 읽고 질문하는 시간을 재지 않았다 | 밀리면 rescue 스크립트로 다음 단계로 넘긴다 |
+| 각 주차 과제 | 학생이 프롬프트를 직접 쓰는 활동이라 정답이 없다 | 실패 기록 자체가 평가 대상이다 |
+
+---
+
+## 4. 수업 후
 
 - 새로 나온 문제를 `docs/TROUBLESHOOTING.md`에 추가하고 푸시
 - 잘 먹힌 프롬프트 / 실패한 프롬프트를 `docs/PROMPT-CARDS.md`에 반영
-- 실제 소요 시간을 기록해 다음 학기 시간표를 조정
+- **실제 소요 시간을 기록해 다음 학기 시간표를 조정** — 지금 시간표는 실측값이 아니다
