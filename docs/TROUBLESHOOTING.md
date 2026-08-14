@@ -362,13 +362,24 @@ git add Assets/Scenes/Arena.unity
 
 ### 진도가 밀려서 따라잡고 싶음
 
-```bash
-git add -A && git commit -m "wip"
-git fetch upstream --tags
-git checkout -b rescue w2-complete
+**Unity를 먼저 닫으세요.** 씬 파일이 바뀌는데 Unity가 그것을 메모리에 들고 있으면 충돌합니다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\rescue.ps1 w2-complete
 ```
 
+Git Bash / macOS 라면:
+
+```bash
+./tools/rescue.sh w2-complete
+```
+
+하던 작업은 스크립트가 `wip` 커밋으로 자동 저장합니다.
+끝나면 Unity를 다시 열고 `Assets/Scenes/Arena` 씬을 엽니다.
+
 원래 작업으로 돌아가려면 `git checkout main`.
+
+태그 이름을 빼고 실행하면 고를 수 있는 목록이 나옵니다.
 
 ### 실수로 커밋을 날렸음
 
