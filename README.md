@@ -133,6 +133,7 @@ CLAUDE.md     ← Claude Code가 읽는 프로젝트 규약. 1주차에 함께 �
 
 - **[docs/00-SETUP.md](docs/00-SETUP.md)** — 0주차 환경 세팅 (수업 전 필수)
 - **[docs/01-WEEK1.md](docs/01-WEEK1.md)** — **1주차 실습 진행** (이동 + 사격) ← 수업 당일 이 문서를 엽니다
+- **[docs/02-WEEK2.md](docs/02-WEEK2.md)** — **2주차 실습 진행** (적 AI + 웨이브)
 - **[docs/PROMPT-CARDS.md](docs/PROMPT-CARDS.md)** — 검증된 프롬프트 카드 9장
 - **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** — 자주 나는 문제와 해결
 - **[docs/INSTRUCTOR.md](docs/INSTRUCTOR.md)** — 교수·조교용 운영 노트
