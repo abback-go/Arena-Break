@@ -274,6 +274,7 @@ GameObject:
   - component: {fileID: 185724492}
   - component: {fileID: 185724491}
   - component: {fileID: 185724494}
+  - component: {fileID: 185724495}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -366,6 +367,20 @@ MonoBehaviour:
   _hitMarkerLifetime: 0.5
   _hitMarkerScale: 0.1
   _hitMarkerColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &185724495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185724489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af83596b03498c64191942970d897a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaBreak.Core.Health
+  _maxHealth: 100
+  _currentHealth: 0
 --- !u!1 &207401913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1683,6 +1698,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1483927654}
   - component: {fileID: 1483927653}
+  - component: {fileID: 1483927655}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1706,6 +1722,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 45536fb2b36e22f468565b0ca6c54280, type: 2}
   - {fileID: 11400000, guid: aee556a00fc3f014e8cc0b35d33449fa, type: 2}
   - {fileID: 11400000, guid: 78644843d72ad704fb8b01bc9343fe9e, type: 2}
+  - {fileID: 11400000, guid: 08a8ec63e8d4f064d9556d08939a813d, type: 2}
+  - {fileID: 11400000, guid: bd7b360b742d6384fbc0bb8d7abdbe34, type: 2}
   _delayBetweenWaves: 3
   _spawnPointsRoot: {fileID: 1993861842}
   _player: {fileID: 185724493}
@@ -1724,6 +1742,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1483927655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483927652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb5966e70fab76a4f8b943de707e17c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaBreak.Core.GameManager
+  _playerHealth: {fileID: 185724495}
+  _waveSpawner: {fileID: 1483927653}
+  _playerController: {fileID: 185724491}
+  _weaponSystem: {fileID: 185724494}
+  _readyDuration: 1.5
 --- !u!1 &1531007140
 GameObject:
   m_ObjectHideFlags: 0
