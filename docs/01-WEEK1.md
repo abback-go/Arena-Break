@@ -229,7 +229,7 @@ Hierarchy를 직접 만지지 않습니다. **AI에게 시키고, 결과를 검�
 **1. 첫 시도에서 컴포넌트를 못 찾을 수 있습니다**
 
 ```
-Component type 'PlayerController' not found or is not a valid Component.
+Component type 'PlayerController' not found. Use a fully-qualified name if needed.
 ```
 
 `CLAUDE.md`가 네임스페이스를 규정하고 있어서, `ArenaBreak.Player.PlayerController` 라고 전체 이름을 써야 붙습니다.
@@ -241,8 +241,11 @@ AI가 알아서 재시도할 것입니다. **못 하고 있으면 이렇게 알�
 
 **2. 실패했는데 오브젝트는 이미 만들어져 있을 수 있습니다**
 
-위 에러가 났을 때 `Player` 오브젝트 자체는 **이미 생성된 상태**입니다.
-AI가 처음부터 재시도하면 **`Player` 가 두 개**가 됩니다. Hierarchy를 확인하세요.
+AI가 오브젝트 생성과 컴포넌트 부착을 **한 번에 요청**했다면, 컴포넌트만 실패하고
+`Player` 오브젝트는 이미 만들어진 채로 남습니다. 이때 처음부터 재시도하면 **`Player` 가 두 개**가 됩니다.
+(둘을 나눠서 호출했다면 이 일은 생기지 않습니다.)
+
+어느 쪽이든 **재시도 뒤에는 Hierarchy에서 `Player` 개수를 확인**하세요.
 
 ### 검증 — 오늘의 핵심 ★
 
