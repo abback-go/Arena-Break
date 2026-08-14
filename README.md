@@ -72,6 +72,11 @@ bash tools/setup-check.sh
 
 모든 항목에 `[OK]`가 뜨면 준비 완료입니다.
 
+### 5. 수업 당일
+
+**[docs/01-WEEK1.md](docs/01-WEEK1.md)** 를 열어 처음부터 순서대로 따라가세요.
+3시간 실습이 그 문서 하나로 진행됩니다. 프롬프트, 씬 세팅, 검증 체크리스트가 전부 들어 있습니다.
+
 ---
 
 ## 진도가 밀렸을 때 — 두 줄이면 따라잡습니다
@@ -127,6 +132,7 @@ CLAUDE.md     ← Claude Code가 읽는 프로젝트 규약. 1주차에 함께 �
 ## 수업 자료
 
 - **[docs/00-SETUP.md](docs/00-SETUP.md)** — 0주차 환경 세팅 (수업 전 필수)
+- **[docs/01-WEEK1.md](docs/01-WEEK1.md)** — **1주차 실습 진행** (이동 + 사격) ← 수업 당일 이 문서를 엽니다
 - **[docs/PROMPT-CARDS.md](docs/PROMPT-CARDS.md)** — 검증된 프롬프트 카드 9장
 - **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** — 자주 나는 문제와 해결
 - **[docs/INSTRUCTOR.md](docs/INSTRUCTOR.md)** — 교수·조교용 운영 노트
