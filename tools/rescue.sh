@@ -95,6 +95,10 @@ fi
 
 BEFORE="$(git rev-parse --abbrev-ref '@{-1}' 2>/dev/null || echo main)"
 
+# 태그는 이 스크립트보다 앞선 시점이라 tools/ 가 들어 있지 않다.
+# 되살려두지 않으면 여기서 다시 점프할 수 없는 막다른 길이 된다
+git checkout "$BEFORE" -- tools/ 2>/dev/null || true
+
 echo
 ok "$TAG 시점으로 이동했습니다  (브랜치: $BRANCH)"
 echo

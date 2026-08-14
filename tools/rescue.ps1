@@ -89,6 +89,11 @@ if ($LASTEXITCODE -eq 0) {
 if ($LASTEXITCODE -ne 0) { Bad "점프에 실패했습니다"; exit 1 }
 
 $Before = git rev-parse --abbrev-ref '@{-1}' 2>$null
+if (-not $Before) { $Before = 'main' }
+
+# 태그는 이 스크립트보다 앞선 시점이라 tools/ 가 들어 있지 않다.
+# 되살려두지 않으면 여기서 다시 점프할 수 없는 막다른 길이 된다
+git checkout $Before -- tools/ 2>$null
 
 Write-Host ""
 Ok "$Tag 시점으로 이동했습니다  (브랜치: $Branch)"
@@ -98,10 +103,6 @@ Write-Host "  1. Unity를 다시 엽니다"
 Write-Host "  2. Assets/Scenes/Arena 씬을 엽니다"
 Write-Host "  3. 여기서 그대로 이어서 작업하면 됩니다"
 Write-Host ""
-if ($Before) {
-    Write-Host "원래 하던 곳으로 돌아가려면:  git checkout $Before"
-} else {
-    Write-Host "원래 하던 곳으로 돌아가려면:  git checkout main"
-}
+Write-Host "원래 하던 곳으로 돌아가려면:  git checkout $Before"
 Write-Host "제출은 이 브랜치를 올려도 됩니다:  git push origin $Branch"
 Write-Host ""
