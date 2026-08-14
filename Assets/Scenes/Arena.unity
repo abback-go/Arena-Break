@@ -1673,6 +1673,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1993861842}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1483927652
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1483927654}
+  - component: {fileID: 1483927653}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1483927653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483927652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca1f927b7626f874abba28407d45e890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaBreak.Core.WaveSpawner
+  _waves:
+  - {fileID: 11400000, guid: 45536fb2b36e22f468565b0ca6c54280, type: 2}
+  - {fileID: 11400000, guid: aee556a00fc3f014e8cc0b35d33449fa, type: 2}
+  - {fileID: 11400000, guid: 78644843d72ad704fb8b01bc9343fe9e, type: 2}
+  _delayBetweenWaves: 3
+  _spawnPointsRoot: {fileID: 1993861842}
+  _player: {fileID: 185724493}
+--- !u!4 &1483927654
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483927652}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1531007140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1810,7 +1861,7 @@ Transform:
   m_GameObject: {fileID: 2146726542}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 243, y: -756, z: 0}
+  m_LocalPosition: {x: 1.4, y: 0, z: -17.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1827,3 +1878,4 @@ SceneRoots:
   - {fileID: 1993861842}
   - {fileID: 185724493}
   - {fileID: 1408303694}
+  - {fileID: 1483927654}

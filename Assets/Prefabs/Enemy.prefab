@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaBreak.Enemy.EnemyAI
   _player: {fileID: 0}
-  _chaseDistance: 20
+  _chaseDistance: 60
   _attackDistance: 2
   _attackInterval: 2
   _attackDamage: 10

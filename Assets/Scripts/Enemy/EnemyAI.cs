@@ -19,7 +19,8 @@ namespace ArenaBreak.Enemy
         [SerializeField] private Transform _player;
 
         [Header("Range")]
-        [SerializeField] private float _chaseDistance = 20f;
+        // 아레나 40×40의 대각선이 약 57m다. 이보다 작으면 먼 구석의 적이 오지 않는다
+        [SerializeField] private float _chaseDistance = 60f;
         [SerializeField] private float _attackDistance = 2f;
 
         [Header("Attack")]
