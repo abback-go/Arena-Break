@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using ArenaBreak.Core;
 using UnityEngine;
 using UnityEngine.AI;
@@ -29,11 +27,6 @@ namespace ArenaBreak.Enemy
         [SerializeField] private float _attackInterval = 2f;
         [SerializeField] private int _attackDamage = 10;
 
-        [Header("Death")]
-        [SerializeField] private float _despawnDelay = 1f;
-
-        // 풀로 돌려보낼 시점을 스포너에게 알린다. 풀을 아는 것은 스포너 쪽이다
-        public event Action Despawned;
 
         private NavMeshAgent _agent;
         private Health _health;
@@ -143,19 +136,11 @@ namespace ArenaBreak.Enemy
             Debug.Log($"적 공격 — 데미지 {_attackDamage}");
         }
 
+        // 사라지는 시점과 풀 반환은 스포너가 정한다. 여기서는 멈추기만 한다
         private void OnDied()
         {
             _state = State.Dead;
             StopMoving();
-            StartCoroutine(Despawn());
-        }
-
-        private IEnumerator Despawn()
-        {
-            yield return new WaitForSeconds(_despawnDelay);
-
-            Despawned?.Invoke();
-            gameObject.SetActive(false);
         }
 
         private void StopMoving()

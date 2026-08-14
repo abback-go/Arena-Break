@@ -3,6 +3,7 @@ using System.Collections;
 using ArenaBreak.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Pool;
 
 namespace ArenaBreak.Player
 {
@@ -36,6 +37,8 @@ namespace ArenaBreak.Player
         private InputAction _attackAction;
         private InputAction _reloadAction;
 
+        private ObjectPool<GameObject> _markerPool;
+
         private int _currentAmmo;
         private float _nextFireTime;
         private bool _isReloading;
@@ -44,6 +47,12 @@ namespace ArenaBreak.Player
         {
             _attackAction = _inputActions.FindActionMap("Player", true).FindAction("Attack", true);
             _reloadAction = new InputAction("Reload", InputActionType.Button, ReloadBindingPath);
+
+            _markerPool = new ObjectPool<GameObject>(
+                createFunc: CreateHitMarker,
+                actionOnGet: marker => marker.SetActive(true),
+                actionOnRelease: marker => marker.SetActive(false),
+                actionOnDestroy: marker => Destroy(marker));
 
             _currentAmmo = _magazineSize;
         }
@@ -114,19 +123,32 @@ namespace ArenaBreak.Player
             AmmoChanged?.Invoke(_currentAmmo, _magazineSize);
         }
 
-        // 풀링 대상: 발사마다 생성/파괴된다
         private void SpawnHitMarker(Vector3 point)
+        {
+            GameObject marker = _markerPool.Get();
+            marker.transform.position = point;
+
+            StartCoroutine(ReleaseHitMarker(marker));
+        }
+
+        private GameObject CreateHitMarker()
         {
             GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
             // Collider를 남기면 다음 발사가 이 구체에 맞는다
             Destroy(marker.GetComponent<Collider>());
 
-            marker.transform.position = point;
             marker.transform.localScale = Vector3.one * _hitMarkerScale;
             marker.GetComponent<MeshRenderer>().material.color = _hitMarkerColor;
 
-            Destroy(marker, _hitMarkerLifetime);
+            return marker;
+        }
+
+        private IEnumerator ReleaseHitMarker(GameObject marker)
+        {
+            yield return new WaitForSeconds(_hitMarkerLifetime);
+
+            _markerPool.Release(marker);
         }
 
         private IEnumerator Reload()

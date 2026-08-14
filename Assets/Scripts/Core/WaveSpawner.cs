@@ -14,6 +14,9 @@ namespace ArenaBreak.Core
         [SerializeField] private List<WaveData> _waves = new List<WaveData>();
         [SerializeField] private float _delayBetweenWaves = 3f;
 
+        // 죽은 뒤 사라지기까지. 풀 반환은 이 시간이 지나고 한다
+        [SerializeField] private float _despawnDelay = 1f;
+
         [Header("Scene References")]
         // 자식 Transform을 모아 쓴다. 스폰 위치를 늘려도 인스펙터를 다시 연결할 필요가 없다
         [SerializeField] private Transform _spawnPointsRoot;
@@ -23,6 +26,8 @@ namespace ArenaBreak.Core
         public event Action<int> WaveCleared;
         public event Action AllWavesCleared;
         public event Action<int> KillCountChanged;
+
+        public int KillCount => _killCount;
 
         private readonly List<Transform> _spawnPoints = new List<Transform>();
         private readonly Dictionary<GameObject, ObjectPool<GameObject>> _pools =
@@ -115,19 +120,12 @@ namespace ArenaBreak.Core
             if (enemy.TryGetComponent(out EnemyAI ai))
             {
                 ai.SetTarget(_player);
-
-                void OnDespawned()
-                {
-                    ai.Despawned -= OnDespawned;
-                    pool.Release(enemy);
-                }
-
-                ai.Despawned += OnDespawned;
             }
 
             _aliveCount++;
 
-            // 매 프레임 씬을 훑는 대신, 스폰한 적의 사망만 듣는다
+            // 매 프레임 씬을 훑는 대신, 스폰한 적의 사망만 듣는다.
+            // 풀 반환도 여기서 한다 — 특정 AI 컴포넌트가 아니라 Health만 있으면 되게
             if (enemy.TryGetComponent(out Health health))
             {
                 void OnEnemyDied()
@@ -136,10 +134,20 @@ namespace ArenaBreak.Core
                     _aliveCount--;
                     _killCount++;
                     KillCountChanged?.Invoke(_killCount);
+
+                    StartCoroutine(ReleaseAfterDelay(pool, enemy));
                 }
 
                 health.Died += OnEnemyDied;
             }
+        }
+
+        private IEnumerator ReleaseAfterDelay(ObjectPool<GameObject> pool, GameObject enemy)
+        {
+            // 죽는 순간 timeScale이 0이 될 수 있다. 그래도 반환은 되어야 한다
+            yield return new WaitForSecondsRealtime(_despawnDelay);
+
+            pool.Release(enemy);
         }
 
         private ObjectPool<GameObject> GetPool(GameObject prefab)

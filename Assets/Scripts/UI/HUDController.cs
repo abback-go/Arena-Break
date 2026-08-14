@@ -32,7 +32,7 @@ namespace ArenaBreak.UI
 
             // 구독 전에 이미 지나간 값이 있으므로 첫 화면을 직접 맞춘다
             OnHealthChanged(_playerHealth.CurrentHealth, _playerHealth.MaxHealth);
-            OnKillCountChanged(0);
+            OnKillCountChanged(_waveSpawner.KillCount);
             _messageRoot.SetActive(false);
         }
 
