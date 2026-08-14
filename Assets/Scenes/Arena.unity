@@ -360,6 +360,7 @@ MonoBehaviour:
   _camera: {fileID: 330585545}
   _fireInterval: 0.15
   _range: 50
+  _damage: 10
   _magazineSize: 12
   _reloadDuration: 1.5
   _hitMarkerLifetime: 0.5
@@ -523,6 +524,7 @@ GameObject:
   - component: {fileID: 316936277}
   - component: {fileID: 316936276}
   - component: {fileID: 316936275}
+  - component: {fileID: 316936278}
   m_Layer: 0
   m_Name: Target_2
   m_TagString: Untagged
@@ -623,6 +625,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 316936273}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &316936278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316936273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af83596b03498c64191942970d897a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaBreak.Core.Health
+  _maxHealth: 30
+  _currentHealth: 0
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,6 +915,7 @@ GameObject:
   - component: {fileID: 534248873}
   - component: {fileID: 534248872}
   - component: {fileID: 534248871}
+  - component: {fileID: 534248874}
   m_Layer: 0
   m_Name: Target_3
   m_TagString: Untagged
@@ -999,6 +1016,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534248869}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &534248874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534248869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af83596b03498c64191942970d897a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaBreak.Core.Health
+  _maxHealth: 30
+  _currentHealth: 0
 --- !u!1 &545357361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,6 +1042,7 @@ GameObject:
   - component: {fileID: 545357365}
   - component: {fileID: 545357364}
   - component: {fileID: 545357363}
+  - component: {fileID: 545357366}
   m_Layer: 0
   m_Name: Target_1
   m_TagString: Untagged
@@ -1111,6 +1143,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 545357361}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &545357366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545357361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af83596b03498c64191942970d897a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaBreak.Core.Health
+  _maxHealth: 30
+  _currentHealth: 0
 --- !u!1 &651449658
 GameObject:
   m_ObjectHideFlags: 0
