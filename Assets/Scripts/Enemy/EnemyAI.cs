@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using ArenaBreak.Core;
 using UnityEngine;
 using UnityEngine.AI;
@@ -28,7 +30,10 @@ namespace ArenaBreak.Enemy
         [SerializeField] private int _attackDamage = 10;
 
         [Header("Death")]
-        [SerializeField] private float _destroyDelay = 1f;
+        [SerializeField] private float _despawnDelay = 1f;
+
+        // 풀로 돌려보낼 시점을 스포너에게 알린다. 풀을 아는 것은 스포너 쪽이다
+        public event Action Despawned;
 
         private NavMeshAgent _agent;
         private Health _health;
@@ -43,9 +48,11 @@ namespace ArenaBreak.Enemy
             _health = GetComponent<Health>();
         }
 
+        // 풀에서 다시 꺼내질 때마다 실행된다. 체력과 상태를 여기서 되돌린다
         private void OnEnable()
         {
             _health.Died += OnDied;
+            _health.ResetHealth();
             _state = State.Idle;
         }
 
@@ -140,7 +147,15 @@ namespace ArenaBreak.Enemy
         {
             _state = State.Dead;
             StopMoving();
-            Destroy(gameObject, _destroyDelay);
+            StartCoroutine(Despawn());
+        }
+
+        private IEnumerator Despawn()
+        {
+            yield return new WaitForSeconds(_despawnDelay);
+
+            Despawned?.Invoke();
+            gameObject.SetActive(false);
         }
 
         private void StopMoving()

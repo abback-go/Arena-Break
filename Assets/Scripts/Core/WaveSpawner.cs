@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using ArenaBreak.Enemy;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Pool;
 
 namespace ArenaBreak.Core
 {
@@ -22,6 +24,9 @@ namespace ArenaBreak.Core
         public event Action AllWavesCleared;
 
         private readonly List<Transform> _spawnPoints = new List<Transform>();
+        private readonly Dictionary<GameObject, ObjectPool<GameObject>> _pools =
+            new Dictionary<GameObject, ObjectPool<GameObject>>();
+
         private int _aliveCount;
 
         private void Awake()
@@ -89,12 +94,33 @@ namespace ArenaBreak.Core
         private void Spawn(GameObject prefab)
         {
             Transform point = _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Count)];
-            GameObject enemy = Instantiate(prefab, point.position, point.rotation);
+            ObjectPool<GameObject> pool = GetPool(prefab);
+            GameObject enemy = pool.Get();
+
+            // NavMeshAgent는 transform을 직접 옮기면 내부 위치와 어긋난다. Warp를 쓴다
+            if (enemy.TryGetComponent(out NavMeshAgent agent))
+            {
+                agent.Warp(point.position);
+            }
+            else
+            {
+                enemy.transform.position = point.position;
+            }
+
+            enemy.transform.rotation = point.rotation;
 
             // 프리팹은 씬의 Player를 참조할 수 없다. 스폰한 쪽이 넣어준다
             if (enemy.TryGetComponent(out EnemyAI ai))
             {
                 ai.SetTarget(_player);
+
+                void OnDespawned()
+                {
+                    ai.Despawned -= OnDespawned;
+                    pool.Release(enemy);
+                }
+
+                ai.Despawned += OnDespawned;
             }
 
             _aliveCount++;
@@ -110,6 +136,23 @@ namespace ArenaBreak.Core
 
                 health.Died += OnEnemyDied;
             }
+        }
+
+        private ObjectPool<GameObject> GetPool(GameObject prefab)
+        {
+            if (_pools.TryGetValue(prefab, out ObjectPool<GameObject> pool))
+            {
+                return pool;
+            }
+
+            pool = new ObjectPool<GameObject>(
+                createFunc: () => Instantiate(prefab),
+                actionOnGet: enemy => enemy.SetActive(true),
+                actionOnRelease: enemy => enemy.SetActive(false),
+                actionOnDestroy: enemy => Destroy(enemy));
+
+            _pools.Add(prefab, pool);
+            return pool;
         }
     }
 }
