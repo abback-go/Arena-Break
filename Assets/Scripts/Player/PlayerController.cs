@@ -23,6 +23,9 @@ namespace ArenaBreak.Player
         [SerializeField] private float _minPitch = -80f;
         [SerializeField] private float _maxPitch = 80f;
 
+        // 커서가 잠기는 첫 프레임에 delta가 크게 튄다. 막지 않으면 시작하자마자 바닥을 본다
+        [SerializeField] private float _maxLookDeltaPerFrame = 100f;
+
         [Header("Cursor")]
         [SerializeField] private bool _lockCursor = true;
 
@@ -77,7 +80,8 @@ namespace ArenaBreak.Player
 
         private void Look()
         {
-            Vector2 lookDelta = _lookAction.ReadValue<Vector2>();
+            Vector2 lookDelta = Vector2.ClampMagnitude(
+                _lookAction.ReadValue<Vector2>(), _maxLookDeltaPerFrame);
 
             // 마우스 delta는 이미 프레임 간 이동량이다. Time.deltaTime을 곱하면 프레임레이트에 따라 감도가 달라진다
             transform.Rotate(Vector3.up, lookDelta.x * _mouseSensitivity);

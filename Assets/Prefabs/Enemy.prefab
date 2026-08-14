@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6990747836589326076}
   - component: {fileID: 3598834004243598780}
   - component: {fileID: 6687153730678752472}
+  - component: {fileID: 3850135609747038890}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -170,4 +171,18 @@ MonoBehaviour:
   _attackDistance: 2
   _attackInterval: 2
   _attackDamage: 10
-  _destroyDelay: 1
+  _despawnDelay: 1
+--- !u!114 &3850135609747038890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6027025945824787239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5babc798510ab6649b714cb715708eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArenaBreak.Enemy.HitFlash
+  _flashColor: {r: 1, g: 1, b: 1, a: 1}
+  _flashDuration: 0.05
