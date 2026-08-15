@@ -533,7 +533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af83596b03498c64191942970d897a80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaBreak.Core.Health
-  _maxHealth: 100
+  _maxHealth: 500
   _currentHealth: 0
 --- !u!1 &207401913
 GameObject:
