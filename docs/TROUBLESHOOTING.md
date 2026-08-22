@@ -381,14 +381,18 @@ Git Bash / macOS 라면:
 
 ### 점프한 뒤 원래 작업으로 돌아가기
 
-**Unity를 먼저 닫고** 두 줄을 칩니다.
+**Unity를 먼저 닫고** 한 줄이면 됩니다.
 
 ```bash
-rm tools/rescue.ps1 tools/rescue.sh
 git checkout main
 ```
 
-`git checkout main` 만 치면 이 에러가 납니다.
+점프해 둔 브랜치(`rescue-<태그>`)는 남겨두세요. 다시 그 시점을 보고 싶을 때
+`git checkout rescue-w2-complete` 한 줄이면 갑니다.
+
+Unity를 다시 열고 `Assets/Scenes/Arena` 씬을 엽니다.
+
+### 돌아가려는데 `untracked working tree files would be overwritten`
 
 ```
 error: The following untracked working tree files would be overwritten by checkout:
@@ -396,14 +400,15 @@ error: The following untracked working tree files would be overwritten by checko
         tools/rescue.sh
 ```
 
-점프한 시점에는 `tools/` 가 아직 없었기 때문에 스크립트가 자기 자신을 되살려 둔 것입니다.
-그래야 그 시점에서 다시 점프할 수 있습니다. 되살린 파일은 추적되지 않은 상태라
-git이 덮어쓰기를 거부합니다.
+**2026년 8월 이전 버전의 rescue 스크립트로 점프한 브랜치**에서만 납니다.
+그때는 되살린 `tools/` 를 커밋하지 않아서, 추적되지 않은 파일로 남아 있었습니다.
 
-지워도 잃는 것은 없습니다. `main` 으로 넘어가면서 원래 파일이 그대로 복원됩니다.
+지우고 넘어가면 됩니다. `main` 으로 가면서 원래 파일이 그대로 복원되니 잃는 것은 없습니다.
 
-점프해 둔 브랜치(`rescue-<태그>`)는 남겨두세요. 다시 그 시점을 보고 싶을 때
-`git checkout rescue-w2-complete` 한 줄이면 됩니다.
+```bash
+rm tools/rescue.ps1 tools/rescue.sh
+git checkout main
+```
 
 ### `-File 매개 변수에 대한 인수 '.toolsrescue.ps1'이(가) 없습니다`
 
