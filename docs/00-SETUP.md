@@ -71,7 +71,7 @@ git config --global user.email "본인@메일주소"
 
 ```bash
 node --version
-# v24.x.x 
+# v24.x.x
 ```
 
 ---
@@ -236,7 +236,6 @@ Unity 콘솔에 지금 어떤 메시지가 있는지 읽어줘.
 응답 첫 줄에 **`Called UnityMCP`** 가 뜨고 Unity 콘솔 내용을 읽어오면 성공입니다.
 
 ---
-
 
 ## 자주 막히는 지점
 
