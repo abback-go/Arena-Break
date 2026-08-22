@@ -515,7 +515,7 @@ rescue 스크립트가 들어 있지 않습니다. 그래서 스크립트가 점
 
 ```
 1. github.com/abback-go/Arena-Break 에서 [Use this template] → 리포 이름 arena-break
-2. clone 한 뒤 docs/00-SETUP.md 의 체크리스트 8개를 끝내 올 것
+2. clone 한 뒤 docs/00-SETUP.md 의 체크리스트 7개를 끝내 올 것
 3. 수업 당일에는 docs/01-WEEK1.md 를 열고 시작
 ```
 
