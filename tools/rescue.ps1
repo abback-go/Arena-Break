@@ -95,6 +95,13 @@ if (-not $Before) { $Before = 'main' }
 # 되살려두지 않으면 여기서 다시 점프할 수 없는 막다른 길이 된다
 git checkout $Before -- tools/ 2>$null
 
+# 되살린 tools/ 는 커밋까지 해둔다. 스테이징 상태로 두면 추적되지 않은 파일이 되어
+# 돌아갈 때 'git checkout' 이 덮어쓰기를 거부한다
+$Staged = git diff --cached --name-only
+if ($Staged) {
+    git commit -q -m "chore: 점프용 도구 복원"
+}
+
 Write-Host ""
 Ok "$Tag 시점으로 이동했습니다  (브랜치: $Branch)"
 Write-Host ""
