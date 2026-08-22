@@ -377,9 +377,65 @@ Git Bash / macOS 라면:
 하던 작업은 스크립트가 `wip` 커밋으로 자동 저장합니다.
 끝나면 Unity를 다시 열고 `Assets/Scenes/Arena` 씬을 엽니다.
 
-원래 작업으로 돌아가려면 `git checkout main`.
-
 태그 이름을 빼고 실행하면 고를 수 있는 목록이 나옵니다.
+
+### 점프한 뒤 원래 작업으로 돌아가기
+
+**Unity를 먼저 닫고** 두 줄을 칩니다.
+
+```bash
+rm tools/rescue.ps1 tools/rescue.sh
+git checkout main
+```
+
+`git checkout main` 만 치면 이 에러가 납니다.
+
+```
+error: The following untracked working tree files would be overwritten by checkout:
+        tools/rescue.ps1
+        tools/rescue.sh
+```
+
+점프한 시점에는 `tools/` 가 아직 없었기 때문에 스크립트가 자기 자신을 되살려 둔 것입니다.
+그래야 그 시점에서 다시 점프할 수 있습니다. 되살린 파일은 추적되지 않은 상태라
+git이 덮어쓰기를 거부합니다.
+
+지워도 잃는 것은 없습니다. `main` 으로 넘어가면서 원래 파일이 그대로 복원됩니다.
+
+점프해 둔 브랜치(`rescue-<태그>`)는 남겨두세요. 다시 그 시점을 보고 싶을 때
+`git checkout rescue-w2-complete` 한 줄이면 됩니다.
+
+### `-File 매개 변수에 대한 인수 '.toolsrescue.ps1'이(가) 없습니다`
+
+Git Bash에서 PowerShell 명령을 실행한 것입니다. Git Bash는 `\` 를 이스케이프 문자로 처리해서
+`.\tools\rescue.ps1` 이 `.toolsrescue.ps1` 로 뭉개집니다.
+
+Git Bash에서는 셸 스크립트 쪽을 쓰세요.
+
+```bash
+./tools/rescue.sh w2-complete
+```
+
+PowerShell 명령은 **PowerShell 창에서** 실행합니다.
+
+### 제목이 `Untitled` 이고 저장 창이 뜸
+
+Unity를 켠 채로 브랜치를 옮겼을 때 생깁니다. 씬 파일이 통째로 바뀌었는데
+Unity는 그것을 모르고 빈 씬으로 되돌아간 상태입니다.
+
+**저장하지 마세요.** 여기서 `Arena.unity` 를 고르면 빈 씬이 아레나를 덮어씁니다.
+바닥·벽·스폰 포인트가 전부 사라집니다.
+
+1. 저장 창에서 **취소**
+2. `Assets/Scenes/Arena` 더블클릭 — 또는 `File → Open Scene`
+
+씬 파일은 멀쩡합니다. 다시 열기만 하면 됩니다.
+
+브랜치를 옮길 때는 순서를 지키세요.
+
+```
+Unity 닫기 → 점프 또는 checkout → Unity 열기 → Arena 씬 열기
+```
 
 ### 실수로 커밋을 날렸음
 
