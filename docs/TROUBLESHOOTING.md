@@ -206,7 +206,7 @@ python tools/strip-unity-ai.py .
 > 목록에는 "AI Assistant"가 아니라 그냥 **"Assistant"** 로 표시됩니다. "AI"로 검색하면 안 나올 수 있습니다.
 >
 > **`AI Navigation`은 절대 지우지 마세요.** 이름에 AI가 들어가지만 NavMesh 패키지이고
-> 2주차 적 AI에 필수입니다. 스크립트도 이것만은 보존합니다.
+> 2장 적 AI에 필수입니다. 스크립트도 이것만은 보존합니다.
 
 ---
 
