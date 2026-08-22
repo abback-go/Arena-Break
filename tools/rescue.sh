@@ -95,14 +95,20 @@ fi
 
 BEFORE="$(git rev-parse --abbrev-ref '@{-1}' 2>/dev/null || echo main)"
 
-# 태그는 이 스크립트보다 앞선 시점이라 tools/ 가 들어 있지 않다.
-# 되살려두지 않으면 여기서 다시 점프할 수 없는 막다른 길이 된다
-git checkout "$BEFORE" -- tools/ 2>/dev/null || true
+# 태그는 지난 시점이라 최신 도구·문서·설정이 들어 있지 않다. 코드와 씬만 태그 것을 쓰고
+# 나머지는 되살린다.
+#   tools            없으면 여기서 다시 점프할 수 없는 막다른 길이 된다
+#   ProjectSettings  옛것이면 빌드가 전체 화면으로 나온다 (창 모드 설정이 없다)
+#   docs             옛 문서를 보고 따라가게 된다
+#   CLAUDE.md        1장에서 직접 추가한 규약이 사라진다
+for p in tools docs .claude ProjectSettings CLAUDE.md README.md; do
+  git checkout "$BEFORE" -- "$p" 2>/dev/null || true
+done
 
-# 되살린 tools/ 는 커밋까지 해둔다. 스테이징 상태로 두면 추적되지 않은 파일이 되어
+# 커밋까지 해둔다. 스테이징 상태로 두면 추적되지 않은 파일이 되어
 # 돌아갈 때 'git checkout' 이 덮어쓰기를 거부한다
 if [ -n "$(git diff --cached --name-only)" ]; then
-  git commit -q -m "chore: 점프용 도구 복원"
+  git commit -q -m "chore: 도구·문서·빌드 설정 복원"
 fi
 
 echo
