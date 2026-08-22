@@ -1,11 +1,4 @@
-# 0주차 — 환경 세팅 가이드
-
-> **수업 전에 반드시 끝내세요.** 세팅이 안 된 채로 오면 3시간 수업 내내 아무것도 하지 못합니다.
-> 막히면 혼자 붙들지 말고 **온라인 세팅 클리닉**에 오거나 학습 게시판에 스크린샷과 함께 질문하세요.
-
-예상 소요 시간: **40분~1시간** (Unity 설치 시간 제외)
-
----
+# 환경 세팅 가이드
 
 ## 체크리스트
 
@@ -14,12 +7,11 @@
 ```
 □ 1. Unity Hub + Unity 6.3 LTS 설치 (Windows Build Support 포함)
 □ 2. Git 설치 + GitHub 계정
-□ 3. Node.js LTS 설치
+□ 3. Node.js 설치
 □ 4. Claude Code 설치 및 로그인
 □ 5. Python 3.10+ 및 uv 설치
 □ 6. 스타터 프로젝트 복제 후 Unity로 열기 (콘솔 에러 0개)
 □ 7. MCP for Unity 창 열기 → Start Server → Configure All Detected Clients → Auto-Start 체크
-□ 8. 인증 스크린샷 3장 제출
 ```
 
 ---
@@ -28,23 +20,21 @@
 
 ### 1-1. Unity Hub 설치
 
-<https://unity.com/download> 에서 Unity Hub를 받아 설치합니다.
+[https://unity.com/download](https://unity.com/download) 에서 Unity Hub를 받아 설치합니다.
 
 ### 1-2. Unity 6.3 LTS 설치
 
-Unity Hub → **Installs** → **Install Editor** → **Unity 6.3 LTS (6000.3.x)** 선택
+Unity Hub → **Installs** → **Install Editor** → **Unity 6.3 LTS (6000.3.22f1)** 선택
 
-설치 옵션에서 아래를 **반드시 체크**하세요.
+설치 옵션에서 아래를  **체크**하세요.
 
-- ✅ **Windows Build Support (IL2CPP)** ← 3주차 빌드에 필요합니다
-- ✅ Microsoft Visual Studio Community (이미 있으면 생략 가능)
-- ✅ Documentation
+- ✅ **Windows Build Support (IL2CPP)**
+- ✅ Microsoft Visual Studio Community (VS Code  있으면 생략 가능)
+- ✅ Documentation (선택사항)
 
-> **버전 주의**: 6.5나 6.4가 아니라 **6.3 LTS** 입니다.
+> **버전 주의**: 6.5나 6.4가 아니라 **6.3 LTS** (6000.3.22f1) 입니다.
 > 다른 버전으로 열면 프로젝트 업그레이드 프롬프트가 뜨고, 수업 화면과 달라집니다.
 > 이미 다른 버전이 깔려 있어도 상관없습니다. Unity Hub는 여러 버전을 동시에 관리합니다.
-
-설치는 20~40분 걸립니다. 그동안 아래 2~5번을 진행하세요.
 
 ---
 
@@ -52,7 +42,7 @@ Unity Hub → **Installs** → **Install Editor** → **Unity 6.3 LTS (6000.3.x)
 
 ### 2-1. Git 설치
 
-- **Windows**: <https://git-scm.com/download/win> — 설치 중 옵션은 전부 기본값으로 두면 됩니다
+- **Windows**: [https://git-scm.com/download/win](https://git-scm.com/download/win) — 설치 중 옵션은 전부 기본값으로 두면 됩니다
 - **macOS**: 터미널에서 `git --version` 실행 → 없으면 자동으로 설치 안내가 뜹니다
 
 설치 확인:
@@ -71,19 +61,17 @@ git config --global user.email "본인@메일주소"
 
 ### 2-3. GitHub 계정
 
-<https://github.com> 에서 계정을 만듭니다. 이미 있으면 그대로 사용하세요.
-
-> **팁**: <https://education.github.com/pack> 에서 학생 인증을 하면 GitHub Student Developer Pack을 무료로 받을 수 있습니다. 필수는 아닙니다.
+[https://github.com](https://github.com) 에서 계정을 만듭니다. 이미 있으면 그대로 사용하세요.
 
 ---
 
 ## 3. Node.js
 
-<https://nodejs.org> 에서 **LTS** 버전을 받아 설치합니다.
+[https://nodejs.org](https://nodejs.org) 에서 **LTS** 버전을 받아 설치합니다.
 
 ```bash
 node --version
-# v20.x.x 또는 v22.x.x
+# v24.x.x 
 ```
 
 ---
@@ -114,8 +102,6 @@ claude
 
 답변이 돌아오면 성공입니다. `/exit` 또는 `Ctrl+C` 두 번으로 종료합니다.
 
-> **이 화면을 스크린샷으로 찍어두세요.** (인증 제출용)
-
 ---
 
 ## 5. Python + uv
@@ -129,7 +115,7 @@ python --version    # Windows
 python3 --version   # macOS / Linux
 ```
 
-3.10 미만이거나 없으면 <https://www.python.org/downloads/> 에서 설치하세요.
+3.10 미만이거나 없으면 [https://www.python.org/downloads/](https://www.python.org/downloads/) 에서 설치하세요.
 Windows 설치 화면에서 **"Add python.exe to PATH"** 를 체크한 뒤 설치합니다.
 
 ### 5-2. uv 설치
@@ -166,14 +152,14 @@ uv --version
 git clone https://github.com/<내계정>/arena-break.git
 cd arena-break
 
-# 아래 두 줄은 그대로 복사
+# 아래 두 줄은 그대로 복사 : origin 학생 리포, upstream 교수 리포
 git remote add upstream https://github.com/abback-go/Arena-Break.git
 git fetch upstream --tags
 ```
 
 ### 6-3. Unity로 열기
 
-1. Unity Hub → **Projects** → **Add** → `arena-break` 폴더 선택
+1. Unity Hub → **Projects** → **Add** → 디스크에서 프로젝트 추가 → `arena-break` 폴더 선택
 2. 버전 드롭다운에서 **6.3 LTS** 확인
 3. 프로젝트를 엽니다 — 첫 임포트는 **3~10분** 걸립니다
 
@@ -181,8 +167,6 @@ git fetch upstream --tags
 
 `Window → General → Console` 을 열고 **에러(빨간색)가 0개**인지 확인합니다.
 노란색 경고는 있어도 괜찮습니다.
-
-> **이 화면을 스크린샷으로 찍어두세요.** (인증 제출용)
 
 에러가 있다면 → [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 를 확인하세요.
 
@@ -233,6 +217,7 @@ MCP for Unity 창 → Advanced 탭 → Auto-Start Server on Editor Load 체크
 ### 7-4. 연결 테스트
 
 > ### 순서가 중요합니다 — Claude Code는 마지막에 실행
+>
 > Claude Code는 **시작할 때 MCP 설정을 한 번 읽습니다.**
 > 그래서 `Start Server` 보다 먼저 켜 두면 Unity 도구를 잡지 못합니다.
 >
@@ -250,34 +235,17 @@ Unity 콘솔에 지금 어떤 메시지가 있는지 읽어줘.
 
 응답 첫 줄에 **`Called UnityMCP`** 가 뜨고 Unity 콘솔 내용을 읽어오면 성공입니다.
 
-한 번 더 확인:
-
-```
-현재 열려 있는 씬의 오브젝트 목록을 알려줘.
-```
-
-`Arena`, `Floor`, `Wall`, `SpawnPoints` 가 나오면 완료입니다.
-
 ---
 
-## 8. 인증 제출
-
-아래 스크린샷 **3장**을 학습 게시판에 제출하세요.
-
-1. **Unity 버전 화면** — Unity Hub의 Installs 탭에서 6.3 LTS가 보이는 화면
-2. **Claude Code 실행 화면** — 4-3에서 찍은 응답 화면
-3. **콘솔 클린 화면** — 6-4에서 찍은 에러 0개 화면
-
----
 
 ## 자주 막히는 지점
 
-| 증상 | 해결 |
-|---|---|
-| `uv: command not found` | 터미널을 완전히 닫았다 다시 여세요. PATH 반영에 재시작이 필요합니다 |
-| `claude: command not found` | `npm install -g @anthropic-ai/claude-code` 를 다시 실행. Windows는 관리자 권한 터미널로 |
-| Unity 임포트가 10분 넘게 안 끝남 | 백신 실시간 검사가 원인인 경우가 많습니다. 프로젝트 폴더를 예외로 등록해 보세요 |
-| MCP 목록에 Claude Code가 안 뜸 | Claude Code를 한 번이라도 실행한 적이 있어야 감지됩니다. 먼저 `claude`를 실행하세요 |
-| 콘솔에 빨간 에러 | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 참조 |
+| 증상                             | 해결                                                                                      |
+| -------------------------------- | ----------------------------------------------------------------------------------------- |
+| `uv: command not found`        | 터미널을 완전히 닫았다 다시 여세요. PATH 반영에 재시작이 필요합니다                       |
+| `claude: command not found`    | `npm install -g @anthropic-ai/claude-code` 를 다시 실행. Windows는 관리자 권한 터미널로 |
+| Unity 임포트가 10분 넘게 안 끝남 | 백신 실시간 검사가 원인인 경우가 많습니다. 프로젝트 폴더를 예외로 등록해 보세요           |
+| MCP 목록에 Claude Code가 안 뜸   | Claude Code를 한 번이라도 실행한 적이 있어야 감지됩니다. 먼저`claude`를 실행하세요      |
+| 콘솔에 빨간 에러                 | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 참조                                              |
 
 더 자세한 내용은 **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** 에 있습니다.
