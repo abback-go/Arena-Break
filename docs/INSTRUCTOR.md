@@ -4,6 +4,52 @@
 
 ---
 
+## 0. 한 학기 15주에서 이 문서가 놓이는 자리
+
+`docs/01~03` 은 **장(章)** 단위이고, 학기에서는 **6~7주차 두 번의 수업**에 들어갑니다.
+장 셋을 두 주에 압축하고, 남는 것은 과제로 돌립니다.
+
+| 주 | 내용 |
+|---|---|
+| 1 | 강의소개 + 환경 구축 + 데모 시연 |
+| 2 | Unity 기초 ① 컴포넌트 조립, 인스펙터 직렬화 |
+| 3 | Unity 기초 ② 프레임 루프, 입력, 물리 |
+| 4 | Unity 기초 ③ 이벤트 구독·해제, 프리팹 |
+| 5 | Git & GitHub (GitMap 7주제 전부 + 짝 실습으로 충돌·PR) |
+| 6 | **ARENA BREAK ① 쏘고 죽인다** — 1장 전부 + 2-2 체력/데미지 |
+| 7 | **ARENA BREAK ② 몰려오고 끝난다** — 2장 나머지 + 3장 + AI 코드 리뷰 |
+| 8 | 중간고사 |
+| 9 | 팀 기획 확정 + 팀 리포 세팅 |
+| 10 | 기획 발표 |
+| 11~13 | 팀 개발 |
+| 14 | 최종 발표 |
+| 15 | 기말고사 |
+
+성적: 중간 30 / 기말 30 / 출석 20 / 평소 20.
+
+**두 주에 넣는 방법**
+
+체력·데미지(2-2)를 1일차 끝으로 당깁니다. 쏴서 표적이 **죽는 것**까지 봐야 첫 수업이
+게임으로 끝납니다. 2일차는 적 AI → 웨이브 → 상태 머신·HUD → 빌드로 달립니다.
+
+문서에 있으나 수업 시간에 못 넣는 것은 과제입니다 — 각 장 끝의 과제, 3장 폴리시 절,
+`docs/retrospective.md`.
+
+**팀 프로젝트는 ARENA BREAK 확장을 필수로 거세요.** 실개발이 11~13주 세 주뿐이라
+백지에서는 못 만듭니다. 씬·NavMesh·풀링·HUD가 이미 서 있으면 기능 두세 개는 붙습니다.
+
+### 이번 학기에 바뀐 것
+
+| 항목 | 내용 |
+|---|---|
+| 빌드 화면 | 전체 화면 → **창 모드 1280x720**. 스타터의 `ProjectSettings` 에 이미 들어 있습니다 |
+| 플레이어 체력 | 100 → **500**. 적 공격이 10이라 50대를 버팁니다. 100이면 5웨이브를 볼 새가 없습니다 |
+| `.claude/hooks` | `.ps1` 을 쓸 때 UTF-8 BOM을 자동으로 붙이는 훅. 없으면 PowerShell이 한글을 cp949로 읽어 깨집니다 |
+| rescue 스크립트 | 점프 후 최신 도구·문서·빌드 설정을 되살립니다 (3-4 참고) |
+| 문서 표기 | 「N주차」 → 「N장」. 학기 주차와 문서 장 번호가 더는 같지 않습니다 |
+
+---
+
 ## 1. 스타터 리포 만드는 순서 (최초 1회)
 
 이 스캐폴드는 **Unity 프로젝트 위에 덮어씌우는 껍데기**입니다.
@@ -110,7 +156,7 @@ Edit > Project Settings > Player > Other Settings > Active Input Handling
 Window > Package Management > Package Manager > In Project
 ```
 
-**AI Navigation** 이 목록에 있어야 합니다. 2주차 적 AI가 이 패키지를 씁니다.
+**AI Navigation** 이 목록에 있어야 합니다. 2장 적 AI가 이 패키지를 씁니다.
 없으면 `Unity Registry` 에서 설치합니다.
 
 ### 1-4. 아레나 씬 만들기
@@ -220,8 +266,8 @@ AI Navigation 2.x에서 Static 플래그 방식이 NavMesh Surface 컴포넌트 
 
 NavMesh 에셋은 커밋 대상입니다. 이 파일이 없으면 학생 프로젝트에서 적이 이동하지 않습니다.
 
-이 씬과 베이크는 3주 버전·2주 압축 버전 모두 스타터에 포함해 배포합니다.
-1주차 시간표(시연 A: CLAUDE.md+MCP / 시연 B: 이동+사격)에는 아레나를 만드는 시간이 없고,
+이 씬과 베이크는 스타터에 포함해 배포합니다.
+1장 시간표(1-1 `CLAUDE.md` 다듬기 / 1-2 이동 / 1-3 사격)에는 아레나를 만드는 시간이 없고,
 학생은 완성된 아레나 위에서 코드부터 시작합니다.
 
 ### 1-5. MCP for Unity 설치 및 버전 고정
@@ -386,12 +432,12 @@ D-14에 **전체 게임을 혼자 한 번 만들면서** 각 단계마다 태그
 
 ```bash
 git tag -a w1-step1    -m "플레이어 이동 (아레나 씬은 스타터에 포함됨)"
-git tag -a w1-complete -m "1주차 완료: 사격, 탄약, 재장전"
+git tag -a w1-complete -m "1장 완료: 사격, 탄약, 재장전"
 git tag -a w2-step1    -m "Health / IDamageable"
 git tag -a w2-step2    -m "NavMesh 적 AI"
-git tag -a w2-complete -m "2주차 완료: 웨이브 시스템, 오브젝트 풀링"
+git tag -a w2-complete -m "2장 완료: 웨이브 시스템, 오브젝트 풀링"
 git tag -a w3-step1    -m "GameManager 상태 머신 + HUD"
-git tag -a w3-complete -m "3주차 완료: 폴리시, 빌드 설정"
+git tag -a w3-complete -m "3장 완료: 폴리시, 창 모드 빌드 설정"
 
 git push origin --tags
 ```
@@ -412,8 +458,8 @@ git checkout main
 ### 3-1. 내 PC — 시연 준비 (10분)
 
 ```
-□ C:\Abback\arena-break-demo\ArenaBreak.exe 가 실행된다
-□ Esc 로 종료된다   ← 유일한 종료 수단이다
+□ C:\Abback\demo-build\ArenaBreak.exe 가 창 모드(1280x720)로 뜬다
+□ 제목 표시줄의 X 로 닫힌다. Esc 로도 닫힌다
 □ 프로젝터 해상도에서 HUD 네 개가 다 보인다 (체력·탄약·웨이브·킬)
 □ 인터넷이 끊겨도 되도록 zip을 USB에 하나 복사해 둔다
 ```
@@ -451,10 +497,19 @@ git checkout main
 
 ```
 □ Unity 를 닫는다
-□ powershell -ExecutionPolicy Bypass -File .\tools\rescue.ps1 w1-complete
+□ ./tools/rescue.sh w1-complete       (Git Bash)
+□ ./tools/rescue.ps1 w1-complete      (PowerShell)
 □ Assets/Scripts/Player 에 파일 두 개가 생겼다
 □ git checkout main 으로 돌아온다
 ```
+
+Git Bash에서 `.\tools\rescue.ps1` 로 쓰면 백슬래시가 이스케이프로 먹혀
+`.toolsrescue.ps1` 이 됩니다. 학생에게는 슬래시로 안내하세요.
+
+**점프해도 최신 상태로 남는 것이 있습니다.** 태그는 지난 시점이라 창 모드 설정·최신 문서·
+rescue 스크립트가 들어 있지 않습니다. 그래서 스크립트가 점프 직후
+`tools` `docs` `.claude` `ProjectSettings` `CLAUDE.md` `README.md` 를 원래 브랜치 것으로
+되살리고 커밋합니다. 코드와 씬만 태그 시점입니다.
 
 ### 3-5. 학생에게 보낼 안내 (수업 전날)
 
@@ -471,8 +526,8 @@ git checkout main
 | 항목 | 왜 미검증인가 | 어떻게 되든 |
 |---|---|---|
 | 1-1 public 필드 실험 / 2-1 씬 조작 질문 / 3-3 "1번만 만들기" | AI가 규약을 지키는지 보는 관찰 항목인데, 리허설 세션은 문서를 이미 읽은 상태였다 | 문서에 **"안 지켜졌으면 이렇게 해석하라"** 표가 있어 어느 쪽이 나와도 수업이 성립한다 |
-| 시간 배분 (25 / 55 / 65분 등) | 사람이 코드를 읽고 질문하는 시간을 재지 않았다 | 밀리면 rescue 스크립트로 다음 단계로 넘긴다 |
-| 각 주차 과제 | 학생이 프롬프트를 직접 쓰는 활동이라 정답이 없다 | 실패 기록 자체가 평가 대상이다 |
+| 시간 배분 (20 / 35 / 30분 등) | 사람이 코드를 읽고 질문하는 시간을 재지 않았다 | 밀리면 rescue 스크립트로 다음 단계로 넘긴다 |
+| 각 장 과제 | 학생이 프롬프트를 직접 쓰는 활동이라 정답이 없다 | 실패 기록 자체가 평가 대상이다 |
 
 ---
 
