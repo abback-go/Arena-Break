@@ -341,6 +341,30 @@ UnityEditor 네임스페이스를 런타임 스크립트에서 쓰고 있는지 
 
 ## Git 문제
 
+### 교수님이 문서를 고쳤다는데 내 것은 그대로
+
+내 리포는 `Use this template` 으로 **복사해서 만든 별개의 저장소**입니다.
+교수 리포와 연결되어 있지 않아 자동으로 따라오지 않습니다.
+
+`docs/` 만 가져옵니다.
+
+```bash
+git fetch upstream
+git checkout upstream/main -- docs/
+git commit -m "docs: 교수 문서 최신본 반영"
+```
+
+`Assets/` 는 건드리지 않으므로 **내 코드와 씬은 그대로 남습니다.**
+
+> `git merge upstream/main` 은 쓰지 마세요. 두 저장소는 커밋 이력이 아예 달라서
+> 병합이 되지 않고, 되더라도 `Arena.unity` 가 충돌합니다.
+
+`tools/` 의 스크립트도 갱신됐다면 같은 방법으로 받습니다.
+
+```bash
+git checkout upstream/main -- tools/
+```
+
 ### `Library/`가 커밋되려고 함
 
 `.gitignore`가 적용되지 않은 상태입니다. 이미 추적 중이면 캐시를 비웁니다.
