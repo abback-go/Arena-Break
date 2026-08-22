@@ -22,7 +22,7 @@
 ### AI Navigation 주의
 
 이름에 `ai`가 들어가지만 **인공지능과 무관한 길찾기(NavMesh) 패키지**입니다.
-2주차 적 AI에 반드시 필요하므로 **절대 제거하지 마세요.**
+2장 적 AI에 반드시 필요하므로 **절대 제거하지 마세요.**
 
 Universal 3D 템플릿에 기본 포함되지 않는 경우가 있습니다.
 `Window → Package Manager → Unity Registry → AI Navigation → Install`
@@ -101,7 +101,7 @@ Window → Package Manager → In Project
 > "AI"로 검색하면 안 나올 수 있습니다.
 
 > ### AI Navigation은 건드리지 마세요
-> 이름에 `ai`가 들어가지만 NavMesh 패키지입니다. 2주차 적 AI에 반드시 필요합니다.
+> 이름에 `ai`가 들어가지만 NavMesh 패키지입니다. 2장 적 AI에 반드시 필요합니다.
 
 ### 2단계 — 잔여물 정리 및 검증
 
