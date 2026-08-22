@@ -611,7 +611,7 @@ git clean -fd Assets/       # Assets 안에 새로 생긴 파일 삭제
 
 ---
 
-# 원격 저장소에 푸쉬
+# 원격 저장소에 푸시
 
 ```bash
 git push origin main
